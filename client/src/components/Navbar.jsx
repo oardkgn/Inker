@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "../assets/inkerLogo.png";
-import homebg from "../assets/homebg.png";
-import { FiSearch } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
+import { FiSearch } from "react-icons/fi";
 
 function Navbar() {
   return (
@@ -11,22 +11,32 @@ function Navbar() {
       <div className=" relative flex-1 flex gap-8 items-center justify-end">
         <input
           className=" w-full max-w-[390px] bg-white p-2 outline-none rounded-md shadow-md"
+          placeholder="Search"
           type="text"
         />
-        <button className="absolute right-11 p-2 pr-0 group"><FiSearch className=" group-hover:scale-110 transition-all  bg-transparent " /></button>
+        <button className="absolute right-11 p-2 pr-0 group">
+          <FiSearch className=" group-hover:scale-110 transition-all  bg-transparent " />
+        </button>
         <div className=" bg-pribla w-[1px] h-8 rounded-full"></div>
       </div>
       <div className=" text-xl">
-        <button className="group p-4 ml-4 ">
-        <a className="" href="">Contact</a>
-        <div className="w-0 h-[2px] bg-pribla transition-all group-hover:w-full"></div>
-        </button>
-        <button className="group p-4 ">
-        <a className="" href="">Login</a>
-        <div className="w-0 h-[2px] bg-pribla transition-all group-hover:w-full"></div>
-        </button>
+        <Link to="/">
+          <button className="group p-4 ml-4 ">
+            <p className="" href="">
+              Contact
+            </p>
+            <div className="w-0 h-[2px] bg-pribla transition-all group-hover:w-full"></div>
+          </button>
+        </Link>
+        <Link to="auth">
+          <button className="group p-4 ">
+            <p className="" href="">
+              Login
+            </p>
+            <div className="w-0 h-[2px] bg-pribla transition-all group-hover:w-full"></div>
+          </button>
+        </Link>
       </div>
-      <img src={homebg} className=" absolute w-56 top-60 right-0" alt="" />
     </div>
   );
 }

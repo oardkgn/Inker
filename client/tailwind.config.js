@@ -9,6 +9,9 @@ export default {
       colors:{
         "priwhi" : "#eeeeee",
         "pribla" : "#252422",
+      },
+      screens:{
+        "exl":"2100px"
       }
     },
   },
