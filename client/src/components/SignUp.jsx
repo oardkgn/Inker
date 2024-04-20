@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { LuMousePointer2 } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+import{PulseLoader} from "react-spinners"
 
 function SignUp({ setIsLogin }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     surname: "",
   });
+
+  const navigate = useNavigate();
 
   const handleFormChange = (e) => {
     let newData = formData;
@@ -24,19 +29,21 @@ function SignUp({ setIsLogin }) {
     });
   };
 
-  console.log(formData);
-
-  const handleSignUp = async(e) => {
-    e.preventDefault()
-    const user = await fetch("http://localhost:8000/user/signup",{
-      method:"POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-    const data = await user.json();
-    console.log(data);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(false);
+    try {
+      const user = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        formData
+      );
+      console.log(user);
+      setLoading(false);
+    } catch (error) {
+      setError(error.response.data);
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,7 +51,11 @@ function SignUp({ setIsLogin }) {
       <h3 className=" bg-transparent text-center text-3xl font-semibold text-priwhi mb-8">
         Sign Up
       </h3>
-      <form onSubmit={e => handleSignUp(e)} className=" flex flex-col gap-4 bg-transparent" action="">
+      <form
+        onSubmit={(e) => handleSignUp(e)}
+        className=" flex flex-col gap-4 bg-transparent"
+        action=""
+      >
         <div className=" bg-pribla flex flex-col">
           <label className=" text-priwhi bg-pribla" htmlFor="name">
             Name
@@ -52,6 +63,9 @@ function SignUp({ setIsLogin }) {
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
             type="text"
+            required={true}
+            minLength="2"
+            maxLength="40"
             name=""
             onChange={(e) => handleFormChange(e)}
             id="name"
@@ -64,6 +78,9 @@ function SignUp({ setIsLogin }) {
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
             type="text"
+            required={true}
+            minLength="2"
+            maxLength="40"
             name=""
             id="surname"
             onChange={(e) => handleFormChange(e)}
@@ -77,6 +94,7 @@ function SignUp({ setIsLogin }) {
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
             type="email"
+            required={true}
             name=""
             id="email"
             onChange={(e) => handleFormChange(e)}
@@ -89,14 +107,18 @@ function SignUp({ setIsLogin }) {
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
             type="password"
+            required={true}
+            minLength="6"
+            maxLength="30"
             name=""
             id="password"
             onChange={(e) => handleFormChange(e)}
           />
         </div>
-        <div className=" bg-transparent mt-4 flex gap-1">
-          <button className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
-            Sign Up
+        <div className=" relative bg-transparent mt-4 flex gap-1">
+        {error &&  <p className=" absolute -top-6 left-1/2 -translate-x-1/2 text-red-500 bg-transparent">{error}</p>}
+          <button disabled={loading} className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
+            {loading ? <PulseLoader className=" bg-transparent" size={10} color="#252422" /> : "Sign Up"}
           </button>
           <button className=" transition-all hover:bg-opacity-80 bg-priwhi rounded-md py-4 px-5 text-2xl">
             <FcGoogle className=" bg-transparent" />

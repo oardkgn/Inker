@@ -1,26 +1,43 @@
 import React, { useState,useEffect} from "react";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 import { LuMousePointer2 } from "react-icons/lu";
 
 function Login({ setIsLogin }) {
-  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [formData, setFormData] = useState({
+    email:"",
+    password:""
+  });
   const [result, setResult] = useState("");
 
-  const handleChange = (e) => {
-    setName(e.target.value);
+  const handleFormChange = (e) => {
+    let newData = formData;
+    const key = e.target.id;
+    newData[key] = e.target.value;
+    setFormData({
+      email: newData.email,
+      password: newData.password
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
-    const form = $(e.target);
-    fetch({
-      type: "POST",
-      url: form.attr("action"),
-      data: form.serialize(),
-      success(data) {
-        setResult(data);
-      },
-    });
+    setLoading(true);
+    setError(false);
+    try {
+      const user = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/login`,
+        formData
+      );
+      console.log(user);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      console.log(error.response.data);
+      setLoading(false);
+    }
   };
   
   return (
@@ -29,9 +46,7 @@ function Login({ setIsLogin }) {
         Login
       </h3>
       <form
-        action="http://localhost:8000/server.php"
-        method="post"
-        onSubmit={(event) => handleSubmit(event)}
+        onSubmit={(event) => handleLogin(event)}
         className=" flex flex-col gap-4 bg-transparent"
       >
         <div className=" bg-pribla flex flex-col">
@@ -40,11 +55,10 @@ function Login({ setIsLogin }) {
           </label>
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            onChange={(event) => handleChange(event)}
+            type="email"
+            id="email"
+            name="email"
+            onChange={(event) => handleFormChange(event)}
           />
         </div>
         <div className=" bg-pribla flex flex-col">
@@ -54,8 +68,9 @@ function Login({ setIsLogin }) {
           <input
             className=" bg-priwhi bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
             type="password"
-            name=""
+            name="password"
             id="password"
+            onChange={(event) => handleFormChange(event)}
           />
         </div>
         <div className=" bg-transparent mt-4 flex gap-1">
