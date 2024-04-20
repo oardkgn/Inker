@@ -9,7 +9,7 @@ function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className=" w-full h-[648px] flex pt-12 px-36 mb-10 gap-10 justify-center  bg-priwhi overflow-hidden">
+    <div className=" w-full h-[648px] flex pt-12 px-36 mb-24 gap-10 justify-center  bg-priwhi overflow-hidden">
       
         <Transition
         show={isLogin}
