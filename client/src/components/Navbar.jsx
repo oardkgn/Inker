@@ -15,7 +15,7 @@ function Navbar() {
 
   return (
     <div className=" max-w-[2460px] bg-pribla pr-2 pl-0  md:px-8 mx-auto h-16 w-full flex items-center justify-between border-b-[1px] border-opacity-40 border-pribla ">
-      <img className=" w-24 md:h-14 md:w-auto bg-transparent" src={logo} alt="" />
+      <Link to="/"><img className=" w-24 md:h-14 md:w-auto bg-transparent" src={logo} alt="" /></Link>
       <div className=" bg-transparent relative flex-1 flex gap-0 lg:gap-8 items-center justify-end">
         <input
           className=" w-full max-w-[390px] bg-white p-2 outline-none rounded-md shadow-md"
@@ -36,7 +36,7 @@ function Navbar() {
             <div className="w-0 h-[2px] bg-priwhi transition-all group-hover:w-full"></div>
           </button>
         </Link>
-        <Link className=" bg-transparent" to="auth">
+        <Link className=" bg-transparent" to={user ? "/profile" : "/login"}>
           {user === null ? (
             <button className="group p-4">
               <p className=" bg-transparent" href="">
