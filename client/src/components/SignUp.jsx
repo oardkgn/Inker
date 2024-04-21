@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { LuMousePointer2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import{PulseLoader} from "react-spinners"
+import { AuthContext } from "../context/AuthContext.jsx";
 
 function SignUp({ setIsLogin }) {
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,7 @@ function SignUp({ setIsLogin }) {
     surname: "",
   });
 
+  const {updateUser} = useContext(AuthContext)
   const navigate = useNavigate();
 
   const handleFormChange = (e) => {
@@ -40,14 +42,17 @@ function SignUp({ setIsLogin }) {
       );
       console.log(user);
       setLoading(false);
+      updateUser(user.data);
+      navigate("/home");
     } catch (error) {
-      setError(error.response.data);
       setLoading(false);
+      setError(error.response.data);
+      
     }
   };
 
   return (
-    <div className="w-full p-8 max-w-[400px] bg-pribla rounded-lg">
+    <div className="w-full max-w-[400px] mx-auto p-8 bg-pribla rounded-lg">
       <h3 className=" bg-transparent text-center text-3xl font-semibold text-priwhi mb-8">
         Sign Up
       </h3>
@@ -116,7 +121,7 @@ function SignUp({ setIsLogin }) {
           />
         </div>
         <div className=" relative bg-transparent mt-4 flex gap-1">
-        {error &&  <p className=" absolute -top-6 left-1/2 -translate-x-1/2 text-red-500 bg-transparent">{error}</p>}
+        {error &&  <p className=" absolute whitespace-nowrap text-sm -top-6 left-1/2 -translate-x-1/2 text-red-500 bg-transparent">{error}</p>}
           <button disabled={loading} className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
             {loading ? <PulseLoader className=" bg-transparent" size={10} color="#252422" /> : "Sign Up"}
           </button>

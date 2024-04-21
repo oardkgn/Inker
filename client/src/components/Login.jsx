@@ -1,7 +1,10 @@
-import React, { useState,useEffect} from "react";
+import React, { useState,useEffect,useContext} from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LuMousePointer2 } from "react-icons/lu";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { PulseLoader } from "react-spinners";
 
 function Login({ setIsLogin }) {
   const [loading, setLoading] = useState(false);
@@ -11,6 +14,9 @@ function Login({ setIsLogin }) {
     password:""
   });
   const [result, setResult] = useState("");
+  const navigate = useNavigate();
+
+  const {updateUser} = useContext(AuthContext)
 
   const handleFormChange = (e) => {
     let newData = formData;
@@ -31,11 +37,12 @@ function Login({ setIsLogin }) {
         `${import.meta.env.VITE_BASE_URL}/auth/login`,
         formData
       );
-      console.log(user);
       setLoading(false);
+      updateUser(user.data);
+      navigate("/home");
     } catch (error) {
-      setError(error);
-      console.log(error.response.data);
+      setError(error?.response?.data);
+      console.log(error);
       setLoading(false);
     }
   };
@@ -58,6 +65,7 @@ function Login({ setIsLogin }) {
             type="email"
             id="email"
             name="email"
+            required={true}
             onChange={(event) => handleFormChange(event)}
           />
         </div>
@@ -70,12 +78,15 @@ function Login({ setIsLogin }) {
             type="password"
             name="password"
             id="password"
+            maxLength="30"
+            minLength="6"
             onChange={(event) => handleFormChange(event)}
           />
         </div>
-        <div className=" bg-transparent mt-4 flex gap-1">
+        <div className="relative bg-transparent mt-4 flex gap-1">
+        {error &&  <p className=" absolute -top-6 left-1/2 whitespace-nowrap text-sm -translate-x-1/2 text-red-500 bg-transparent">{error}</p>}
           <button className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
-            Login
+          {loading ? <PulseLoader className=" bg-transparent" size={10} color="#252422" /> : "Login"}
           </button>
           <button className=" transition-all hover:bg-opacity-80 bg-priwhi rounded-md py-4 px-5 text-2xl">
             <FcGoogle className=" bg-transparent" />

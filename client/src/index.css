@@ -9,3 +9,7 @@
   font-family: "Dosis", sans-serif;
   background-color: #EEEEEE;
 }
+
+a {
+  background-color: transparent;
+}

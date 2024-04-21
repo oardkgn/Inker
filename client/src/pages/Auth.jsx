@@ -9,11 +9,11 @@ function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className=" w-full h-[648px] flex pt-12 px-36 mb-24 gap-10 justify-center  bg-priwhi overflow-hidden">
+    <div className=" w-full h-[648px] flex pt-4 md:pt-8 px-4 md:px-6 mb-12 md:mb-24 gap-2 lg:gap-10 justify-center  bg-priwhi overflow-hidden">
       
         <Transition
         show={isLogin}
-        className=" w-full max-w-[400px] h-full flex items-center justify-center "
+        className=" w-full lg:max-w-[400px] h-full flex items-center justify-center  z-10 bg-transparent"
         enter="transition duration-500"
         enterFrom="opacity-0 -translate-x-[30%]"
         enterTo="opacity-100 translate-x-0"
@@ -26,7 +26,7 @@ function Auth() {
 
         <Transition
         show={!isLogin}
-        className=" w-full max-w-[400px]"
+        className=" w-full lg:max-w-[400px] z-10 bg-transparent"
         enter="transition duration-500"
         enterFrom="opacity-0 -translate-x-[30%]"
         enterTo="opacity-100 translate-x-0"
@@ -36,8 +36,11 @@ function Auth() {
       >
         <SignUp setIsLogin={setIsLogin}/>
         </Transition>
-        <div className=" rounded-lg overflow-hidden">
-            <img src={thumbsup} alt="" />
+        <div className=" hidden md:block rounded-lg overflow-hidden">
+            <img className="w-[800px] h-[600px] object-cover" src={thumbsup} alt="" />
+        </div>
+        <div className=" block md:hidden absolute rounded-lg overflow-hidden">
+            <img className="w-full h-[660px] object-cover" src={thumbsup} alt="" />
         </div>
     </div>
   );

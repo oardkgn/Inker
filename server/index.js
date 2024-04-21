@@ -2,6 +2,8 @@ import express from "express";
 import mysql from "mysql";
 import cors from "cors"
 import authRoute from "./routes/auth.route.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const corsOptions = {
     origin: 'http://localhost:5173',
