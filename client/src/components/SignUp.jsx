@@ -5,6 +5,7 @@ import { LuMousePointer2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import{PulseLoader} from "react-spinners"
 import { AuthContext } from "../context/AuthContext.jsx";
+import Gauth from "./Gauth.jsx";
 
 function SignUp({ setIsLogin }) {
   const [loading, setLoading] = useState(false);
@@ -40,9 +41,9 @@ function SignUp({ setIsLogin }) {
         `${import.meta.env.VITE_BASE_URL}/auth/register`,
         formData
       );
-      console.log(user);
+      console.log(user.data);
       setLoading(false);
-      updateUser(user.data);
+      updateUser({email:user.data[0],name:user.data[2],surname:user.data[3],admin:user.data[4],googleacc:user.data[5]});
       navigate("/home");
     } catch (error) {
       setLoading(false);
@@ -125,9 +126,7 @@ function SignUp({ setIsLogin }) {
           <button disabled={loading} className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
             {loading ? <PulseLoader className=" bg-transparent" size={10} color="#252422" /> : "Sign Up"}
           </button>
-          <button className=" transition-all hover:bg-opacity-80 bg-priwhi rounded-md py-4 px-5 text-2xl">
-            <FcGoogle className=" bg-transparent" />
-          </button>
+          <Gauth/>
         </div>
       </form>
       <div className=" bg-transparent items-center gap-3 mt-4 flex">

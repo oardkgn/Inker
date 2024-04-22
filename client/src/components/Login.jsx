@@ -5,6 +5,7 @@ import axios from "axios";
 import { LuMousePointer2 } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { PulseLoader } from "react-spinners";
+import Gauth from "./Gauth.jsx";
 
 function Login({ setIsLogin }) {
   const [loading, setLoading] = useState(false);
@@ -88,9 +89,7 @@ function Login({ setIsLogin }) {
           <button className=" transition-all hover:bg-opacity-80 bg-priwhi flex-1 rounded-md font-semibold text-pribla p-4">
           {loading ? <PulseLoader className=" bg-transparent" size={10} color="#252422" /> : "Login"}
           </button>
-          <button className=" transition-all hover:bg-opacity-80 bg-priwhi rounded-md py-4 px-5 text-2xl">
-            <FcGoogle className=" bg-transparent" />
-          </button>
+          <Gauth/>
         </div>
       </form>
       <div className=" bg-transparent items-center gap-3 mt-4 flex">

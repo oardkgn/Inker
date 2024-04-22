@@ -36,7 +36,7 @@ function Navbar() {
             <div className="w-0 h-[2px] bg-priwhi transition-all group-hover:w-full"></div>
           </button>
         </Link>
-        <Link className=" bg-transparent" to={user ? "/profile" : "/login"}>
+        <Link className=" bg-transparent" to={user ? "/profile" : "/auth"}>
           {user === null ? (
             <button className="group p-4">
               <p className=" bg-transparent" href="">
@@ -47,7 +47,7 @@ function Navbar() {
           ) : (
             <button className="group p-4 hidden md:block ">
               <p className=" bg-transparent" href="">
-                {currentUser.email}
+                {user.email}
               </p>
               <div className="w-0 h-[2px] bg-priwhi transition-all group-hover:w-full"></div>
             </button>
