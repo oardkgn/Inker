@@ -36,7 +36,8 @@ function Login({ setIsLogin }) {
     try {
       const user = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/auth/login`,
-        formData
+        formData,
+        {withCredentials:true}
       );
       setLoading(false);
       updateUser(user.data);

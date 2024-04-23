@@ -2,19 +2,17 @@ import express from "express";
 import mysql from "mysql";
 import cors from "cors"
 import authRoute from "./routes/auth.route.js";
+import userRoute from "./routes/user.route.js";
+import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 dotenv.config();
 
 const corsOptions = {
     origin: 'http://localhost:5173',
-    optionsSuccessStatus: 200,
+    credentials: true
   };
 
 const app = express();
-
-//middleware
-app.use(cors(corsOptions));
-app.use(express.json());
 
 export const db = mysql.createConnection({
   host: "localhost",
@@ -23,11 +21,21 @@ export const db = mysql.createConnection({
   database: "inker",
 });
 
-
-app.use("/api/auth", authRoute);
-
+//middleware
+app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(express.json());
 
 
 app.listen(8000, () => {
   console.log("Connected to Server!");
 });
+
+
+
+
+app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
+
+
+

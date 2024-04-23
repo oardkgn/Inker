@@ -77,6 +77,7 @@ export const login = async (req, res) => {
         httpOnly: true,
         // secure:true,
         maxAge: age,
+        withCredentials: true
       })
       .status(200)
       .json({ ...other, token });
@@ -159,6 +160,8 @@ export const google = async (req, res) => {
 };
 
 export const logout = (req, res) => {
+  
+
   res
     .clearCookie("access_token", {
       sameSite: "none",

@@ -39,7 +39,8 @@ function SignUp({ setIsLogin }) {
     try {
       const user = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/auth/register`,
-        formData
+        formData,
+        {withCredentials:true}
       );
       console.log(user.data);
       setLoading(false);
