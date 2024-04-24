@@ -6,10 +6,16 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Notify from "./Notify";
+import Modal from "./Modal";
 
 function UserUpdate() {
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [showNot, setShowNot] = useState(false);
+  const [notify, setNotify] = useState({
+    text:"",
+    type:""
+  })
   const [error, setError] = useState(false);
   const { currentUser, updateUser } = useContext(AuthContext);
   const [user, setUser] = useState(currentUser);
@@ -50,6 +56,7 @@ function UserUpdate() {
       console.log(user.data);
       setLoading(false);
       setShowNot(true);
+      setNotify({text:"User updated successfully.",type:"success"})
       updateUser(user.data);
       setIsEditing({
         name: false,
@@ -74,6 +81,25 @@ function UserUpdate() {
       console.log(error);
     }
   };
+
+  const handleDel = async (e) => {
+    const email = user.email;
+    try {
+      const res = await axios.delete(`${import.meta.env.VITE_BASE_URL}/user/delete/${email}`, {
+        withCredentials: true,
+      });
+      setShowNot(true)
+      setNotify({
+        text:"User deleted successfully.",
+        type:"Success"
+      })
+      updateUser(null);
+      setShowModal(false)
+      navigate("/auth");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className=" w-[600px] bg-pribla rounded-lg px-8 py-14">
@@ -167,59 +193,31 @@ function UserUpdate() {
               id="email"
               onChange={(e) => handleChange(e)}
             />
-            <button
-              type="button"
-              onClick={(e) =>
-                setIsEditing({
-                  ...isEditing,
-                  email: !isEditing.email,
-                })
-              }
-              className={`w-10 h-10 flex justify-center items-center rounded-md bg-yellow-500 text-priwhi text-xl transition-all hover:scale-110 ${
-                !isEditing.email && "bg-opacity-30"
-              }`}
-            >
-              <MdEdit className=" bg-transparent" />
-            </button>
+            {!user.googleacc && (
+              <button
+                type="button"
+                onClick={(e) =>
+                  setIsEditing({
+                    ...isEditing,
+                    email: !isEditing.email,
+                  })
+                }
+                className={`w-10 h-10 flex justify-center items-center rounded-md bg-yellow-500 text-priwhi text-xl transition-all hover:scale-110 ${
+                  !isEditing.email && "bg-opacity-30"
+                }`}
+              >
+                <MdEdit className=" bg-transparent" />
+              </button>
+            )}
           </div>
         </div>
-        <div className=" bg-pribla flex flex-col">
-          <label className=" text-priwhi bg-pribla" htmlFor="password">
-            Password
-          </label>
+        {!user.googleacc && (
+          <div className=" bg-pribla flex flex-col">
+            <label className=" text-priwhi bg-pribla" htmlFor="password">
+              Password
+            </label>
 
-          <div className=" flex relative bg-transparent gap-2">
-            <input
-              className=" bg-priwhi flex-1 bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
-              type="password"
-              required={true}
-              minLength="6"
-              maxLength="30"
-              placeholder="*********"
-              name=""
-              id="prePsw"
-              onChange={(e) => handleChange(e)}
-            />
-            <button
-              type="button"
-              onClick={(e) =>
-                setIsEditing({
-                  ...isEditing,
-                  newPsw: !isEditing.newPsw,
-                })
-              }
-              className={`w-10 h-10 flex justify-center items-center rounded-md bg-yellow-500 text-priwhi text-xl transition-all hover:scale-110 ${
-                !isEditing.newPsw && "bg-opacity-30"
-              }`}
-            >
-              <MdEdit className=" bg-transparent" />
-            </button>
-          </div>
-          {isEditing.newPsw && (
-            <div className=" flex flex-col relative bg-transparent mt-2">
-              <label className=" text-priwhi bg-pribla" htmlFor="password">
-                New Password
-              </label>
+            <div className=" flex relative bg-transparent gap-2">
               <input
                 className=" bg-priwhi flex-1 bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
                 type="password"
@@ -228,13 +226,45 @@ function UserUpdate() {
                 maxLength="30"
                 placeholder="*********"
                 name=""
-                value={formData.newPsw}
-                id="newPsw"
+                id="prePsw"
                 onChange={(e) => handleChange(e)}
               />
+              <button
+                type="button"
+                onClick={(e) =>
+                  setIsEditing({
+                    ...isEditing,
+                    newPsw: !isEditing.newPsw,
+                  })
+                }
+                className={`w-10 h-10 flex justify-center items-center rounded-md bg-yellow-500 text-priwhi text-xl transition-all hover:scale-110 ${
+                  !isEditing.newPsw && "bg-opacity-30"
+                }`}
+              >
+                <MdEdit className=" bg-transparent" />
+              </button>
             </div>
-          )}
-        </div>
+            {isEditing.newPsw && (
+              <div className=" flex flex-col relative bg-transparent mt-2">
+                <label className=" text-priwhi bg-pribla" htmlFor="password">
+                  New Password
+                </label>
+                <input
+                  className=" bg-priwhi flex-1 bg-opacity-10 px-3 py-2 text-priwhi outline-none rounded-md"
+                  type="password"
+                  required={true}
+                  minLength="6"
+                  maxLength="30"
+                  placeholder="*********"
+                  name=""
+                  value={formData.newPsw}
+                  id="newPsw"
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+            )}
+          </div>
+        )}
         {error && (
           <p className=" w-full bg-transparent text-center text-red-600">
             {error}
@@ -260,14 +290,15 @@ function UserUpdate() {
         >
           Logout <CiLogout size={24} className=" bg-transparent" />
         </button>
-        <button className=" transition-all hover:scale-105 flex-1 justify-center rounded-lg py-3 flex items-center bg-red-600 text-priwhi">
+        <button onClick={() => setShowModal(true)} className=" transition-all hover:scale-105 flex-1 justify-center rounded-lg py-3 flex items-center bg-red-600 text-priwhi">
           Delete Account{" "}
           <MdOutlineDelete size={24} className=" bg-transparent" />
         </button>
       </div>
+      <Modal activate={handleDel} setShowModal={setShowModal} show={showModal} text={"Are you sure for deleting this user!"}/>
       <Notify
-        text={"User updated successfully."}
-        type={"success"}
+        text={notify.text}
+        type={notify.type}
         show={showNot}
         setShowNot={setShowNot}
       />

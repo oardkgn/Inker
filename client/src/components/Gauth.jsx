@@ -23,7 +23,8 @@ function Gauth() {
             result.user.displayName.split(" ")[
               result.user.displayName.split(" ").length - 1
             ],
-        }
+        },
+        {withCredentials:true}
       );
       updateUser(user.data);
       navigate("/home");

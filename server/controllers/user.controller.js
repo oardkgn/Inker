@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { google } from "./auth.controller.js";
 
 export const update = async (req, res) => {
-  if (req.user.email !== req.params.id)
+  if (req.user.email !== req.params.email)
     return res.status(401).json("You can only update your own account!");
   try {
     const q = "SELECT * FROM users WHERE email = ?";
@@ -16,10 +16,16 @@ export const update = async (req, res) => {
 
     db.query(q, [req.user.email], (err, data) => {
       const foundedUser = data[0];
-      const isPasswordCorrect = bcrypt.compareSync(
+
+      let isPasswordCorrect = bcrypt.compareSync(
         req.body.prePsw,
         data[0].password
       );
+
+      if (foundedUser.googleacc) {
+        isPasswordCorrect = true
+      }
+
 
       if (!isPasswordCorrect) return res.status(400).json("Wrong password!");
 
@@ -31,7 +37,7 @@ export const update = async (req, res) => {
         req.body.name,
         req.body.surname,
         hashedPassword,
-        req.params.id,
+        req.params.email,
       ];
       db.query(q, values, (err, data) => {
         if (err) return res.status(500).json(err);
@@ -50,7 +56,7 @@ export const update = async (req, res) => {
           name: req.body.name,
           surname: req.body.surname,
           admin: foundedUser.admin,
-          googleAcc: foundedUser.googleacc,
+          googleacc: foundedUser.googleacc,
         };
 
         if (req.body.email != req.user.email) {
@@ -73,3 +79,23 @@ export const update = async (req, res) => {
     return res.json("Something went wrong.");
   }
 };
+
+export const deleteUser = async ( req,res) => {
+  const userEmail = req.params.email;
+    const q = "DELETE FROM users WHERE `email` = ?";
+
+    db.query(q, [userEmail], (err, data) => {
+      if (err) return res.status(403).json("You can delete only your post!");
+
+      return res.json("Post has been deleted!");
+    });
+}
+
+export const getUsers = async ( req,res) => {
+
+    const q = "SELECT * FROM users LIMIT ?, ?";
+    db.query(q, [req.body.limit * 10 - 10,req.body.limit * 10], (err, data) => {
+      if (err) return res.status(403).json("Something went wrong!");
+      return res.status(200).json(data);
+    });
+}
