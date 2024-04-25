@@ -23,9 +23,8 @@ export const update = async (req, res) => {
       );
 
       if (foundedUser.googleacc) {
-        isPasswordCorrect = true
+        isPasswordCorrect = true;
       }
-
 
       if (!isPasswordCorrect) return res.status(400).json("Wrong password!");
 
@@ -80,22 +79,56 @@ export const update = async (req, res) => {
   }
 };
 
-export const deleteUser = async ( req,res) => {
+export const deleteUser = async (req, res) => {
   const userEmail = req.params.email;
-    const q = "DELETE FROM users WHERE `email` = ?";
+  const q = "DELETE FROM users WHERE `email` = ?";
 
-    db.query(q, [userEmail], (err, data) => {
-      if (err) return res.status(403).json("You can delete only your post!");
+  db.query(q, [userEmail], (err, data) => {
+    if (err) return res.status(403).json("You can delete only your post!");
 
-      return res.json("Post has been deleted!");
-    });
-}
+    return res.json("Post has been deleted!");
+  });
+};
 
-export const getUsers = async ( req,res) => {
-
-    const q = "SELECT * FROM users LIMIT ?, ?";
-    db.query(q, [req.body.limit * 10 - 10,req.body.limit * 10], (err, data) => {
+export const getUsers = async (req, res) => {
+  const q = `
+  SELECT COUNT(*) AS total_users FROM users
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(403).json("Something went wrong!");
+    const totalUsers = data[0].total_users
+    const q = `
+    SELECT * 
+    FROM users
+    ORDER BY CONCAT(name, ' ', surname)
+    LIMIT ? OFFSET ?
+  `;
+    db.query(q, [5, req.body.page * 5 - 5], (err, data) => {
       if (err) return res.status(403).json("Something went wrong!");
-      return res.status(200).json(data);
+      return res.status(200).json({ users:data,totalUsers});
     });
-}
+  });
+};
+
+export const searchUsers = async (req, res) => {
+  console.log(1);
+  const q = `
+  SELECT COUNT(*) AS total_users
+    FROM users
+    WHERE CONCAT(name, ' ', surname, ' ', email) LIKE ?
+  `;
+  db.query(q,[`%${req.params.text}%`], (err, data) => {
+    if (err) return res.status(403).json("Something went wrong when counting!");
+    const totalUsers = data[0].total_users
+    const q = `
+    SELECT *
+    FROM users
+    WHERE CONCAT(name, ' ', surname, ' ', email) LIKE ?
+    LIMIT ? OFFSET ?
+  `;
+    db.query(q, [`%${req.params.text}%`,5, req.body.page * 5 - 5], (err, data) => {
+      if (err) return res.status(403).json("Something went wrong when searching!");
+      return res.status(200).json({ users:data,totalUsers});
+    });
+  });
+};
