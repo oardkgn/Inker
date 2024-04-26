@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Transition } from '@headlessui/react'
-import Login from "../components/Login";
-import SignUp from "../components/SignUp";
+import Login from "../components/auth/Login";
+import SignUp from "../components/auth/SignUp";
 import homebg from "../assets/homebg.png";
 import thumbsup from "../assets/thumbsup.png";
 

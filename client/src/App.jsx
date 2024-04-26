@@ -6,7 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
-import {ReqLogin, ReqAdmin} from "./components/Restricted";
+import { ReqLogin, ReqAdmin } from "./components/Restricted";
+import Users from "./components/dashboard/Users"
+import Products from "./components/dashboard/Products"
+import Reviews from "./components/dashboard/Reviews"
+import Orders from "./components/dashboard/Orders"
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,7 +25,12 @@ function App() {
         <Route element={<ReqLogin />}>
           <Route path="/profile" element={<Profile />} />
           <Route element={<ReqAdmin />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index path="/dashboard/users" element={<Users />} />
+              <Route path="/dashboard/products" element={<Products />} />
+              <Route path="/dashboard/reviews" element={<Reviews />} />
+              <Route path="/dashboard/orders" element={<Orders />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

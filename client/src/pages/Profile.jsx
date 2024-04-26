@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import tabsArrow from "../assets/tabsArrow.png";
 
-import UserUpdate from "../components/UserUpdate";
+import UserUpdate from "../components/profile/UserUpdate";
 
 function Profile() {
   const [tabPos, setTabPos] = useState(45);

@@ -1,7 +1,7 @@
 import { db } from "../index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { google } from "./auth.controller.js";
+
 
 export const update = async (req, res) => {
   if (req.user.email !== req.params.email)
@@ -90,45 +90,4 @@ export const deleteUser = async (req, res) => {
   });
 };
 
-export const getUsers = async (req, res) => {
-  const q = `
-  SELECT COUNT(*) AS total_users FROM users
-  `;
-  db.query(q, (err, data) => {
-    if (err) return res.status(403).json("Something went wrong!");
-    const totalUsers = data[0].total_users
-    const q = `
-    SELECT * 
-    FROM users
-    ORDER BY CONCAT(name, ' ', surname)
-    LIMIT ? OFFSET ?
-  `;
-    db.query(q, [5, req.body.page * 5 - 5], (err, data) => {
-      if (err) return res.status(403).json("Something went wrong!");
-      return res.status(200).json({ users:data,totalUsers});
-    });
-  });
-};
 
-export const searchUsers = async (req, res) => {
-  console.log(1);
-  const q = `
-  SELECT COUNT(*) AS total_users
-    FROM users
-    WHERE CONCAT(name, ' ', surname, ' ', email) LIKE ?
-  `;
-  db.query(q,[`%${req.params.text}%`], (err, data) => {
-    if (err) return res.status(403).json("Something went wrong when counting!");
-    const totalUsers = data[0].total_users
-    const q = `
-    SELECT *
-    FROM users
-    WHERE CONCAT(name, ' ', surname, ' ', email) LIKE ?
-    LIMIT ? OFFSET ?
-  `;
-    db.query(q, [`%${req.params.text}%`,5, req.body.page * 5 - 5], (err, data) => {
-      if (err) return res.status(403).json("Something went wrong when searching!");
-      return res.status(200).json({ users:data,totalUsers});
-    });
-  });
-};

@@ -3,8 +3,10 @@ import mysql from "mysql";
 import cors from "cors"
 import authRoute from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
+import adminRoute from "./routes/admin.route.js";
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
+import productsRoute from "./routes/products.route.js";
 dotenv.config();
 
 const corsOptions = {
@@ -36,6 +38,8 @@ app.listen(8000, () => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/products", productsRoute);
 
 
 

@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { LuMousePointer2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import{PulseLoader} from "react-spinners"
-import { AuthContext } from "../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 import Gauth from "./Gauth.jsx";
 
 function SignUp({ setIsLogin }) {

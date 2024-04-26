@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LuMousePointer2 } from "react-icons/lu";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 import { PulseLoader } from "react-spinners";
 import Gauth from "./Gauth.jsx";
 

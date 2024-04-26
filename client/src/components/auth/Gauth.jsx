@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { app } from "../firebase";
+import { app } from "../../firebase.js";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 function Gauth() {
   const { updateUser } = useContext(AuthContext);

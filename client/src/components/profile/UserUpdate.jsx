@@ -2,11 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Notify from "./Notify";
-import Modal from "./Modal";
+import Notify from "../Notify";
+import Modal from "../Modal";
 
 function UserUpdate() {
   const [loading, setLoading] = useState(false);
