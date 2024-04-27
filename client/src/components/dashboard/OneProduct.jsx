@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
 import axios from "axios";
+import EditProduct from "./EditProduct"
 
 function product({ product, setShowNot, setNotify, setProducts, products }) {
+  const [showProductModal, setShowProductModal] = useState(false)
   const handleDel = async () => {
     const id = product.id;
     try {
@@ -29,14 +31,17 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
   };
 
   return (
-    <div className=" relative top border text-pribla flex  border-pribla p-4 rounded-lg w-full">
+    <div className=" relative top border text-pribla flex flex-col lg:flex-row items-center  border-pribla p-4 rounded-lg w-full">
+      <EditProduct product={product} showProductModal={showProductModal} setShowProductModal={setShowProductModal} type="Updating" />
+      <div className=" max-w-[200px] p-2">
       <img
-        className=" w-[200px] h-[300px] object-contain rounded-lg"
+        className=" object-contain rounded-lg"
         src="https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg"
         alt=""
       />
+      </div>
 
-      <div className=" flex-1 px-4">
+      <div className=" flex-1 px-4 w-full bg-transparent">
         <div className=" flex flex-col gap-2 ">
           <div className=" flex gap-1 items-center">
             <h3 className=" text-xl font-semibold">{product.name}</h3>
@@ -46,7 +51,7 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
           </div>
 
           <div className=" flex gap-1">
-            {product.subtype?.split(" ").map((type,key) => {
+            {product.subtypes?.split(" ").map((type,key) => {
               return (
                 <h3 key={key} className="bg-pribla text-sm text-priwhi p-1 rounded-lg">
                   {type}
@@ -55,7 +60,7 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
             })}
           </div>
         </div>
-        <div className="h-[100px] overflow-y-scroll mt-1 ">{product.desc}</div>
+        <div className="h-[100px] overflow-y-scroll mt-1 bg-transparent ">{product.description}</div>
         <h3 className=" text-sm font-light">Brand:{product.brand}</h3>
         <div className=" flex gap-2 mt-2">
         <p className=" bg-pribla p-2 rounded-lg text-priwhi">
@@ -68,14 +73,15 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
         <div className=" flex gap-2 mt-2">
         <button
           onClick={handleDel}
-          className=" transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi"
+          className=" whitespace-nowrap  transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi"
         >
           Delete Product
           <MdOutlineDelete size={24} className=" bg-transparent" />
         </button>
         <button
           type="button"
-          className={`transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-yellow-600 text-priwhi`}
+          onClick={() => setShowProductModal(true)}
+          className={` whitespace-nowrap transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-yellow-600 text-priwhi`}
         >
             Edit Product
           <MdEdit size={24} className=" bg-transparent" />

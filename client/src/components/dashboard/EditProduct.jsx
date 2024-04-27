@@ -13,8 +13,20 @@ import {
 } from "firebase/storage";
 import { storage } from "../../firebase";
 import { v4 } from "uuid";
+import axios from "axios";
+import {
+  penBrands,
+  penSubtypes,
+  bookBrands,
+  bookSubTypes,
+  officeBrands,
+  officeSubtypes,
+  stationaryBrands,
+  stationarySubtypes,
+} from "../../products";
+import product from "./OneProduct";
 
-function EditProduct({ showProductModal, setShowProductModal, type }) {
+function EditProduct({product, showProductModal, setShowProductModal, type }) {
   const [files, setFiles] = useState([]);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,73 +36,12 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
     type: "book",
     subtypes: [],
     desc: "",
-    brand: "",
+    brand: "None",
     images: [],
     price: 0,
     stock: 0,
   });
   const [checkBoxes, setCheckBoxes] = useState([]);
-  const imagesListRef = ref(storage, "images/");
-
-  const bookSubTypes = [
-    "Notebook",
-    "Novel",
-    "Educational Book",
-    "Biographie",
-    "Fantasy",
-    "Scifi",
-    "Romance",
-    "Self-Help",
-    "Cookbooks",
-    "Travel Guides",
-    "Drama",
-    "Horror",
-    "Children's Books",
-    "Diaries",
-    "Planners",
-  ];
-
-  const penSubtypes = [
-    "Pencil",
-    "Ballpoint",
-    "Gel",
-    "Fountain",
-    "Rollerball",
-    "Marker",
-    "Fineliner",
-    "Calligraphy",
-    "Highlighter",
-    "Brush",
-    "Multifunction",
-  ];
-
-  const bookBrands = [
-    'Penguin Random House',
-    'HarperCollins',
-    'Simon & Schuster',
-    'Hachette Book Group',
-    'Macmillan Publishers',
-    'Scholastic Corporation',
-    'Pearson Education',
-    'Oxford University Press',
-    'Bloomsbury Publishing',
-    'Random House'
-  ];
-
-  const penBrands = [
-    'Bic',
-    'Pilot',
-    'Parker',
-    'Uni-ball',
-    'Paper Mate',
-    'Pentel',
-    'Zebra',
-    'Sharpie',
-    'Faber-Castell',
-    'Staedtler'
-  ];
-  
-  console.log(formData);
 
   const handleTypeChange = (e) => {
     setFormData({ ...formData, type: e.target.id });
@@ -131,6 +82,7 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
           <input
             id={subtype}
             type="checkbox"
+            checked={formData.subtypes.includes(subtype)}
             onChange={(e) => handleCheckBoxes(e, subtype)}
             value=""
             className="w-4 h-4 cursor-pointer bg-transparent"
@@ -148,42 +100,47 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
   };
 
   const getSubTypes = () => {
-    if (formData.type == "book") {
+    if (formData.type == "Book") {
       renderCheckBoxes(bookSubTypes);
-    } else if (formData.type == "pen") {
+    } else if (formData.type == "Pen") {
       renderCheckBoxes(penSubtypes);
+    } else if (formData.type == "Office") {
+      renderCheckBoxes(officeSubtypes);
+    } else {
+      renderCheckBoxes(stationarySubtypes);
     }
     return checkBoxes;
   };
 
   const getOptions = () => {
-    let arr = []
-    if (formData.type == "book") {
+    let arr = [];
+    if (formData.type == "Book") {
       arr = renderOptions(bookBrands);
-    } else if (formData.type == "pen") {
+    } else if (formData.type == "Pen") {
       arr = renderOptions(penBrands);
+    } else if (formData.type == "Office") {
+      arr = renderOptions(officeBrands);
+    } else {
+      arr = renderOptions(stationaryBrands);
     }
     return arr;
   };
-  
 
   const renderOptions = (brands) => {
-    const arr = []
+    const arr = [];
     brands.map((brand, key) => {
       arr.push(
         <option
           id={brand}
           key={key}
-          onClick={(e) => setFormData({ ...formData, brand: e.target.id })}
+          value={brand}
           className=" text-priwhi bg-pribla rounded-lg"
         >
-          
-            {brand}
-          
+          {brand}
         </option>
       );
     });
-    return arr
+    return arr;
   };
 
   const uploadImage = async () => {
@@ -202,20 +159,47 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
         await getDownloadURL(snapshot.ref).then((url) => {
           imagesUrl.push(url);
         });
-        setLoading(false);
       } catch (error) {
         setError("Error when uploading images check their size less than 2mb.");
         setLoading(false);
+        return 0;
       }
     }
     setFormData({ ...formData, images: imagesUrl });
+    return imagesUrl;
   };
 
-  const handleCreateProduct = async () => {
+  const handleCreateProduct = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError(false);
-    await uploadImage();
-    console.log(formData);
+    const imagesUrl = await uploadImage();
+    if (imagesUrl) {
+      try {
+        const product = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/products/create`,
+          { ...formData, images: imagesUrl },
+          { withCredentials: true }
+        );
+        console.log(product);
+        setLoading(false);
+        setFormData({
+          name: "",
+          type: "book",
+          subtypes: [],
+          desc: "",
+          brand: "None",
+          images: [],
+          price: 0,
+          stock: 0,
+        });
+        setImages([]);
+        setShowProductModal(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -231,6 +215,24 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
       setImages(imagesArr);
     }
   }, [files]);
+
+  console.log(formData);
+
+  useEffect(() => {
+    if (type == "Updating") {
+      console.log();
+      setFormData({
+        name: product.name,
+        type: product.type,
+        subtypes: product.subtypes,
+        desc: product.description,
+        brand: product.brand,
+        images: product.images,
+        price: product.price,
+        stock: product.stock,
+      });
+    }
+  }, []);
 
   return (
     <Transition
@@ -253,7 +255,11 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
         <h1 className=" text-center text-2xl font-semibold text-pribla my-2">
           {type} Product
         </h1>
-        <form className=" flex gap-2" action="">
+        <form
+          onSubmit={(e) => handleCreateProduct(e)}
+          className=" flex gap-2"
+          action=""
+        >
           <div className=" flex flex-col gap-2 max-w-[400px]">
             <div className=" flex flex-col">
               <label htmlFor="name">Product Name</label>
@@ -265,6 +271,9 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                 }
                 value={formData.name}
                 placeholder="Name"
+                minLength={5}
+                maxLength={50}
+                required
                 id="name"
               />
             </div>
@@ -273,10 +282,10 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
               <div className="flex mt-1">
                 <div className="flex items-center me-4">
                   <input
-                    id="book"
+                    id="Book"
                     type="radio"
                     value=""
-                    defaultChecked
+                    defaultChecked = {formData.type == "Book"}
                     onChange={(e) => handleTypeChange(e)}
                     name="type"
                     className=" w-4 h-4 cursor-pointer focus:ring-pribla"
@@ -290,8 +299,9 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                 </div>
                 <div className="flex items-center me-4">
                   <input
-                    id="pen"
+                    id="Pen"
                     type="radio"
+                    defaultChecked = {formData.type == "Pen"}
                     value=""
                     lang="eng"
                     onChange={(e) => handleTypeChange(e)}
@@ -307,8 +317,9 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                 </div>
                 <div className="flex items-center me-4">
                   <input
-                    id="office"
+                    id="Office"
                     type="radio"
+                    defaultChecked = {formData.type == "Office"}
                     value=""
                     onChange={(e) => handleTypeChange(e)}
                     name="type"
@@ -323,8 +334,9 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                 </div>
                 <div className="flex items-center me-4">
                   <input
-                    id="stationary"
+                    id="Stationary"
                     type="radio"
+                    defaultChecked = {formData.type == "Stationary"}
                     value=""
                     onChange={(e) => handleTypeChange(e)}
                     name="type"
@@ -355,7 +367,10 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                     setFormData({ ...formData, price: e.target.value })
                   }
                   value={formData.price}
+                  step=".01"
                   min={0}
+                  max={9999}
+                  required
                   placeholder="$"
                   id="name"
                 />
@@ -373,6 +388,8 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                   }
                   value={formData.stock}
                   min={0}
+                  max={9999}
+                  required
                   placeholder="#"
                   id="name"
                 />
@@ -381,9 +398,17 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
             </div>
             <div className=" flex mt-1 items-center">
               <label htmlFor="select">Brand:</label>
-              <select  className=" border border-pribla p-2 rounded-lg ml-2"  name="" id="select">
-                {getOptions()}
+              <select
+              defaultValue={formData.brand}
+                onChange={(e) =>
+                  setFormData({ ...formData, brand: e.target.value })
+                }
+                className=" border border-pribla p-2 rounded-lg ml-2"
+                name=""
+                id="select"
+              >
                 <option value="">None</option>
+                {getOptions()}
               </select>
             </div>
           </div>
@@ -437,8 +462,7 @@ function EditProduct({ showProductModal, setShowProductModal, type }) {
                 </div>
               ) : (
                 <button
-                  type="button"
-                  onClick={handleCreateProduct}
+                  type="submit"
                   className=" p-4 text-green-700 border border-green-700 rounded transition-all uppercase hover:text-priwhi hover:bg-green-500"
                 >
                   {"Create Product"}

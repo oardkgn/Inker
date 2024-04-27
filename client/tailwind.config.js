@@ -11,7 +11,8 @@ export default {
         "pribla" : "#252422",
       },
       screens:{
-        "exl":"2100px"
+        "exl":"2100px",
+        "sl":"850px"
       }
     },
   },

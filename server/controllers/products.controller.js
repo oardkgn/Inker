@@ -2,7 +2,6 @@ import { db } from "../index.js";
 
 
 export const getProducts = async (req, res) => {
-    console.log(1);
     const q = `
       SELECT COUNT(*) AS total_products FROM products;
       `;
@@ -37,7 +36,7 @@ export const getProducts = async (req, res) => {
     const q = `
       SELECT COUNT(*) AS total_products
         FROM products
-        WHERE CONCAT(name, ' ', type, ' ', subtype, ' ', brand) LIKE ?
+        WHERE CONCAT(name, ' ', type, ' ', subtypes, ' ', brand) LIKE ?
       `;
     db.query(q, [`%${req.params.text}%`], (err, data) => {
       if (err) return res.status(403).json("Something went wrong when counting!");
@@ -45,7 +44,7 @@ export const getProducts = async (req, res) => {
       const q = `
         SELECT *
         FROM products
-        WHERE CONCAT(name, ' ', type, ' ', subtype, ' ', brand) LIKE ?
+        WHERE CONCAT(name, ' ', type, ' ', subtypes, ' ', brand) LIKE ?
         LIMIT ? OFFSET ?
       `;
       db.query(
@@ -57,5 +56,51 @@ export const getProducts = async (req, res) => {
           return res.status(200).json({ products: data, totalProducts });
         }
       );
+    });
+  };
+
+  export const createProduct = async (req, res) => {
+    const q = "SELECT * FROM products WHERE name = ?";
+
+    db.query(q, [req.body.name], (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.length) return res.status(409).json("Product already exists try changing the name!");
+
+      let subtypes = ""
+      if (req.body.subtypes.length == 1) {
+        subtypes = req.body.subtypes[0]
+      }else{
+        subtypes = req.body.subtypes.join(" ")
+      }
+      console.log(req.body);
+      console.log(req.body.images.length);
+      console.log(req.body.subtypes.length);
+      let images = ""
+      if (req.body.images.length == 1) {
+        images = req.body.images[0]
+      }else{
+        images = req.body.images.join(" ")
+      }
+
+      const q =
+        "INSERT INTO products (`name`,`type`,`subtypes`,`description`,`price`,`stock`,`brand`,`images`) VALUES (?)";
+
+      const values = [
+        req.body.name,
+        req.body.type,
+        subtypes,
+        req.body.desc,
+        req.body.price,
+        req.body.stock,
+        req.body.brand,
+        images,
+      ];
+
+      db.query(q, [values], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res
+          .status(200)
+          .json({ data });
+      });
     });
   };

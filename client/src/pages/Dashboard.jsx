@@ -154,7 +154,7 @@ function Dashboard() {
         <div className=" h-full border-r-2 p-4 w-fit border-pribla">
           {/* dashboard navbar */}
 
-          <div className=" rounded-lg flex flex-col w-72 p-4 h-full bg-pribla  gap-4 ">
+          <div className=" rounded-lg flex flex-col w-18 lg:w-72 p-4 h-full bg-pribla  gap-4 ">
             <button
               onClick={() => handleUsers(1)}
               className={
