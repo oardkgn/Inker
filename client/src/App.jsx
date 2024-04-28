@@ -26,7 +26,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route element={<ReqAdmin />}>
             <Route path="/dashboard" element={<Dashboard />}>
-              <Route index path="/dashboard/users" element={<Users />} />
+              <Route path="/dashboard/users" element={<Users />} />
               <Route path="/dashboard/products" element={<Products />} />
               <Route path="/dashboard/reviews" element={<Reviews />} />
               <Route path="/dashboard/orders" element={<Orders />} />

@@ -8,8 +8,6 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
-  listAll,
-  list,
 } from "firebase/storage";
 import { storage } from "../../firebase";
 import { v4 } from "uuid";
@@ -24,16 +22,15 @@ import {
   stationaryBrands,
   stationarySubtypes,
 } from "../../products";
-import product from "./OneProduct";
 
-function EditProduct({product, showProductModal, setShowProductModal, type }) {
+function CreateProduct({ showProductModal, setShowProductModal, setNotify, setShowNot }) {
   const [files, setFiles] = useState([]);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
-    type: "book",
+    type: "Book",
     subtypes: [],
     desc: "",
     brand: "None",
@@ -41,7 +38,10 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
     price: 0,
     stock: 0,
   });
-  const [checkBoxes, setCheckBoxes] = useState([]);
+  const [bookCheckBoxes, setBookCheckBoxes] = useState([]);
+  const [penCheckBoxes, setPenCheckBoxes] = useState([]);
+  const [officeCheckBoxes, setOfficeCheckBoxes] = useState([]);
+  const [stationaryCheckBoxes, setStationaryCheckBoxes] = useState([]);
 
   const handleTypeChange = (e) => {
     setFormData({ ...formData, type: e.target.id });
@@ -55,12 +55,14 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
     setFiles(e.target.files);
   };
 
+
   const handleCheckBoxes = (e, subtype) => {
-    if (e.target.checked) {
+    console.log(subtype);
+    if (e.target.checked && !formData.subtypes.includes(subtype)) {
       let checkedArr = formData.subtypes;
       checkedArr.push(subtype);
       setFormData({ ...formData, subtypes: checkedArr });
-    } else {
+    } else if (!e.target.checked && formData.subtypes.includes(subtype)) {
       let checkedArr = formData.subtypes;
       const index = checkedArr.indexOf(subtype);
       if (index > -1) {
@@ -69,6 +71,7 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
       setFormData({ ...formData, subtypes: checkedArr });
     }
   };
+
 
   const renderCheckBoxes = (subtypes) => {
     const arr = [];
@@ -81,10 +84,11 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
         >
           <input
             id={subtype}
+            name={subtype}
             type="checkbox"
-            checked={formData.subtypes.includes(subtype)}
+            defaultChecked={false}
             onChange={(e) => handleCheckBoxes(e, subtype)}
-            value=""
+            value={subtype}
             className="w-4 h-4 cursor-pointer bg-transparent"
           />
           <p
@@ -96,20 +100,24 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
         </label>
       );
     });
-    setCheckBoxes(arr);
+
+    return arr
   };
 
   const getSubTypes = () => {
     if (formData.type == "Book") {
-      renderCheckBoxes(bookSubTypes);
+      const ret = renderCheckBoxes(bookSubTypes);
+      setBookCheckBoxes(ret)
     } else if (formData.type == "Pen") {
-      renderCheckBoxes(penSubtypes);
+      const ret = renderCheckBoxes(penSubtypes);
+      setPenCheckBoxes(ret)
     } else if (formData.type == "Office") {
-      renderCheckBoxes(officeSubtypes);
+      const ret = renderCheckBoxes(officeSubtypes);
+      setOfficeCheckBoxes(ret)
     } else {
-      renderCheckBoxes(stationarySubtypes);
+      const ret = renderCheckBoxes(stationarySubtypes);
+      setStationaryCheckBoxes(ret)
     }
-    return checkBoxes;
   };
 
   const getOptions = () => {
@@ -181,7 +189,6 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
           { ...formData, images: imagesUrl },
           { withCredentials: true }
         );
-        console.log(product);
         setLoading(false);
         setFormData({
           name: "",
@@ -195,6 +202,11 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
         });
         setImages([]);
         setShowProductModal(false);
+        setShowNot(true);
+        setNotify({
+          text:"Product created successfully.",
+          type:"success"
+        })
       } catch (error) {
         setLoading(false);
         console.log(error);
@@ -203,6 +215,7 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
   };
 
   useEffect(() => {
+    setFormData({...formData,subtypes:[]})
     getSubTypes();
   }, [formData.type]);
 
@@ -216,23 +229,6 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
     }
   }, [files]);
 
-  console.log(formData);
-
-  useEffect(() => {
-    if (type == "Updating") {
-      console.log();
-      setFormData({
-        name: product.name,
-        type: product.type,
-        subtypes: product.subtypes,
-        desc: product.description,
-        brand: product.brand,
-        images: product.images,
-        price: product.price,
-        stock: product.stock,
-      });
-    }
-  }, []);
 
   return (
     <Transition
@@ -253,7 +249,7 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
           <MdCancel size={30} className=" bg-transparent" />
         </button>
         <h1 className=" text-center text-2xl font-semibold text-pribla my-2">
-          {type} Product
+          Create Product
         </h1>
         <form
           onSubmit={(e) => handleCreateProduct(e)}
@@ -353,7 +349,12 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
             </div>
             <div>
               <label htmlFor="">Subtypes</label>
-              <div className="flex mt-1 flex-wrap gap-2">{checkBoxes}</div>
+              <div className="flex mt-1 flex-wrap gap-2">
+                {formData.type == "Book" && bookCheckBoxes}
+                {formData.type == "Pen" && penCheckBoxes}
+                {formData.type == "Office" && officeCheckBoxes}
+                {formData.type == "Stationary" && stationaryCheckBoxes}
+              </div>
             </div>
             <div className=" flex items-center gap-4">
               <div className=" relative flex items-center gap-2">
@@ -452,7 +453,7 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
                   );
                 })}
               </div>
-
+                {error &&  <div className=" text-center text-red-500">{error}</div> }
               {loading ? (
                 <div className=" p-4 text-green-700 border bg-green-500 text-center border-green-700 rounded transition-all uppercase">
                   <PulseLoader
@@ -476,4 +477,4 @@ function EditProduct({product, showProductModal, setShowProductModal, type }) {
   );
 }
 
-export default EditProduct;
+export default CreateProduct;

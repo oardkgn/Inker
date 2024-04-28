@@ -12,7 +12,7 @@ function Notify({ show, text, type, setShowNot }) {
   return (
     <Transition
       show={show}
-      className="fixed bottom-2 right-2"
+      className="fixed bg-transparent bottom-2 right-2"
       enter="transition duration-500"
       enterFrom="opacity-0 translate-x-[30%]"
       enterTo="opacity-100 translate-x-0"

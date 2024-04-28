@@ -3,15 +3,15 @@ import { FaUsers } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdSell } from "react-icons/md";
 import { MdRateReview } from "react-icons/md";
+import { useLocation } from 'react-router-dom'
 import { MdLocalShipping } from "react-icons/md";
 import axios from "axios";
 import { IoCaretBack, IoCaretForward } from "react-icons/io5";
 import Notify from "../components/Notify";
 import { Outlet, useNavigate } from "react-router-dom";
 import { TiPlus } from "react-icons/ti";
-import EditProduct from "../components/dashboard/EditProduct";
+import CreateProduct from "../components/dashboard/CreateProduct";
 function Dashboard() {
-  const [tab, setTab] = useState("users");
   const [page, setPage] = useState(1);
   const [showNot, setShowNot] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -23,6 +23,8 @@ function Dashboard() {
   const [searching, setSearching] = useState(false);
   const [items, setItems] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const location = useLocation();
+  const [tab, setTab] = useState(location.pathname.split("/")[location.pathname.split("/").length - 1]);
 
   const navigate = useNavigate();
 
@@ -79,7 +81,11 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    handleUsers(1);
+    if (tab == "users") {
+      handleUsers(1);
+    }else if(tab == "products"){
+      handleProducts(1);
+    }
   }, []);
 
   useEffect(() => {
@@ -146,7 +152,13 @@ function Dashboard() {
 
   return (
     <div className=" max-w-[2440px] mx-auto p-8">
-       <EditProduct type={"Create"} setShowProductModal={setShowProductModal} showProductModal={showProductModal} />
+      <CreateProduct
+      type="Create"
+        setShowProductModal={setShowProductModal}
+        showProductModal={showProductModal}
+        setShowNot={setShowNot}
+        setNotify={setNotify}
+      />
       <h4 className=" text-4xl text-pribla border-b-2 border-pribla">
         Dashboard
       </h4>
@@ -231,10 +243,15 @@ function Dashboard() {
               </button>
               {tab == "products" && (
                 <button
-                  onClick={() => setShowProductModal(true)}
+                  onClick={() => {
+                    setShowProductModal(true);
+                  }}
                   className=" text-priwhi flex items-center gap-1 bg-green-500 py-2 px-4 transition-all hover:scale-105 rounded-lg"
                 >
-                  <span className=" bg-transparent whitespace-nowrap">Create Product</span> <TiPlus className=" bg-transparent" />
+                  <span className=" bg-transparent whitespace-nowrap">
+                    Create Product
+                  </span>{" "}
+                  <TiPlus className=" bg-transparent" />
                 </button>
               )}
             </div>
@@ -254,7 +271,7 @@ function Dashboard() {
               {page - 1 > 0 && (
                 <button
                   onClick={() => setPage(page - 1)}
-                  className={`w-10 h-10 flex justify-center items-center rounded-lg text-priwhi 
+                  className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
                   }`}
                 >
                   {page - 1}
@@ -262,7 +279,7 @@ function Dashboard() {
               )}
               <button
                 onClick={() => setPage(page)}
-                className={`w-10 h-10 flex justify-center items-center rounded-lg 
+                className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg 
                     !text-pribla bg-priwhi
                 `}
               >
@@ -271,7 +288,7 @@ function Dashboard() {
               {page + 1 <= totalPages && (
                 <button
                   onClick={() => setPage(page + 1)}
-                  className={`w-10 h-10 flex justify-center items-center rounded-lg text-priwhi 
+                  className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
                   }`}
                 >
                   {page + 1}
@@ -280,7 +297,7 @@ function Dashboard() {
               {page + 2 <= totalPages && (
                 <button
                   onClick={() => setPage(page + 2)}
-                  className={`w-10 h-10 flex justify-center items-center rounded-lg text-priwhi 
+                  className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
                   }`}
                 >
                   {page + 2}
@@ -298,7 +315,14 @@ function Dashboard() {
             </div>
           </div>
           <div className=" mt-4 flex flex-col gap-4">
-            <Outlet context={[items, setItems, setShowNot, setNotify]} />
+            <Outlet
+              context={[
+                items,
+                setItems,
+                setShowNot,
+                setNotify,
+              ]}
+            />
           </div>
         </div>
       </div>

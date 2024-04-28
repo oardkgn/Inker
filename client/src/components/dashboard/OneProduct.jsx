@@ -1,10 +1,16 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
 import axios from "axios";
-import EditProduct from "./EditProduct"
+import UpdateProduct from "./UpdateProduct";
 
-function product({ product, setShowNot, setNotify, setProducts, products }) {
-  const [showProductModal, setShowProductModal] = useState(false)
+function product({
+  product,
+  setShowNot,
+  setNotify,
+  setProducts,
+  products,
+}) {
+  const [showProductModal, setShowProductModal] = useState(false);
   const handleDel = async () => {
     const id = product.id;
     try {
@@ -32,13 +38,19 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
 
   return (
     <div className=" relative top border text-pribla flex flex-col lg:flex-row items-center  border-pribla p-4 rounded-lg w-full">
-      <EditProduct product={product} showProductModal={showProductModal} setShowProductModal={setShowProductModal} type="Updating" />
-      <div className=" max-w-[200px] p-2">
-      <img
-        className=" object-contain rounded-lg"
-        src="https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg"
-        alt=""
+      <UpdateProduct
+        product={product}
+        showProductModal={showProductModal}
+        setShowProductModal={setShowProductModal}
+        setNotify={setNotify}
+        setShowNot={setShowNot}
       />
+      <div className=" max-w-[200px] p-2">
+        <img
+          className=" object-contain rounded-lg"
+          src="https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg"
+          alt=""
+        />
       </div>
 
       <div className=" flex-1 px-4 w-full bg-transparent">
@@ -51,41 +63,48 @@ function product({ product, setShowNot, setNotify, setProducts, products }) {
           </div>
 
           <div className=" flex gap-1">
-            {product.subtypes?.split(" ").map((type,key) => {
+            {product.subtypes?.split(" ").map((type, key) => {
               return (
-                <h3 key={key} className="bg-pribla text-sm text-priwhi p-1 rounded-lg">
+                <h3
+                  key={key}
+                  className="bg-pribla text-sm text-priwhi p-1 rounded-lg"
+                >
                   {type}
                 </h3>
               );
             })}
           </div>
         </div>
-        <div className="h-[100px] overflow-y-scroll mt-1 bg-transparent ">{product.description}</div>
+        <div className="h-[100px] overflow-y-scroll mt-1 bg-transparent ">
+          {product.description}
+        </div>
         <h3 className=" text-sm font-light">Brand:{product.brand}</h3>
         <div className=" flex gap-2 mt-2">
-        <p className=" bg-pribla p-2 rounded-lg text-priwhi">
-          Price: <span className=" bg-transparent">{product.price}$</span>{" "}
-        </p>
-        <p className=" bg-pribla p-2 rounded-lg text-priwhi">
-          Stock: <span className=" bg-transparent">{product.stock}</span>{" "}
-        </p>
+          <p className=" bg-pribla p-2 rounded-lg text-priwhi">
+            Price: <span className=" bg-transparent">{product.price}$</span>{" "}
+          </p>
+          <p className=" bg-pribla p-2 rounded-lg text-priwhi">
+            Stock: <span className=" bg-transparent">{product.stock}</span>{" "}
+          </p>
         </div>
         <div className=" flex gap-2 mt-2">
-        <button
-          onClick={handleDel}
-          className=" whitespace-nowrap  transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi"
-        >
-          Delete Product
-          <MdOutlineDelete size={24} className=" bg-transparent" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowProductModal(true)}
-          className={` whitespace-nowrap transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-yellow-600 text-priwhi`}
-        >
+          <button
+            onClick={handleDel}
+            className=" whitespace-nowrap  transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi"
+          >
+            Delete Product
+            <MdOutlineDelete size={24} className=" bg-transparent" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setShowProductModal(true);
+            }}
+            className={` whitespace-nowrap transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-yellow-600 text-priwhi`}
+          >
             Edit Product
-          <MdEdit size={24} className=" bg-transparent" />
-        </button>
+            <MdEdit size={24} className=" bg-transparent" />
+          </button>
         </div>
       </div>
     </div>
