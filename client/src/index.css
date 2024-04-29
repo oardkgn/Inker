@@ -21,3 +21,52 @@ a {
     margin: 0;
   }
 }
+
+svg.star-svg {
+  display: inline;
+}
+
+.swiper-button-prev {
+  color: #EEEEEE;
+  border-radius: 100%;
+  background-color: #252422;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 100px;
+}
+.swiper{
+  background:transparent!;
+}
+
+.swiper-button-next{
+  color: #EEEEEE;
+  border-radius: 100%;
+  background-color: #252422;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 100px;
+}
+
+.swiper-button-next:after, 
+.swiper-button-prev:after {
+  font-size: 20px;
+}
+
+.swiper-button-next.swiper-button-disabled, 
+.swiper-button-prev.swiper-button-disabled {
+    opacity: 0;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: red !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: rgba(255, 0, 0, 0.5);
+}

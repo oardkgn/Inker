@@ -12,7 +12,11 @@ export default {
       },
       screens:{
         "exl":"2100px",
+        "2xl":"1640px",
         "sl":"850px"
+      },
+      backgroundImage: {
+        'sticky1': "url('src/assets/sticky1.png')",
       }
     },
   },

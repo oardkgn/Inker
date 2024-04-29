@@ -26,6 +26,73 @@ export const getProducts = async (req, res) => {
   });
 };
 
+export const getProduct = async (req, res) => {
+  const productId = req.params.id;
+    const q = `
+        SELECT * 
+        FROM products
+        WHERE id=?
+      `;
+    db.query(q, [productId], (err, data) => {
+
+      if (err)
+        return res
+          .status(403)
+          .json("Something went wrong when fetching page product!");
+      return res.status(200).json(data[0]);
+    });
+
+};
+export const getTopSellerProducts = async (req, res) => {
+    const q = `
+        SELECT * 
+        FROM products
+        ORDER BY sells DESC
+        LIMIT 15
+      `;
+    db.query(q, (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json("Something went wrong when fetching page product!");
+      return res.status(200).json({ products: data });
+    });
+
+};
+export const getTopRatedProducts = async (req, res) => {
+    const q = `
+        SELECT * 
+        FROM products
+        ORDER BY rating DESC
+        LIMIT 15
+      `;
+    db.query(q, (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json("Something went wrong when fetching rated page product!");
+      return res.status(200).json({ products: data });
+    });
+
+};
+export const getNewProducts = async (req, res) => {
+    const q = `
+        SELECT * 
+        FROM products
+        ORDER BY created_at ASC
+        LIMIT 15
+      `;
+    db.query(q, (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json("Something went wrong when fetching new product page product!");
+      return res.status(200).json({ products: data });
+    });
+
+};
+
+
 export const deleteProduct = async (req, res) => {
   const productId = req.params.id;
   const q = "DELETE FROM products WHERE `id` = ?";

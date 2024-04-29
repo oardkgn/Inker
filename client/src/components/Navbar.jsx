@@ -15,10 +15,10 @@ function Navbar() {
 
 
   return (
-    <div className=" max-w-[2460px] bg-pribla pr-2 pl-0  md:px-8 mx-auto h-16 w-full flex items-center justify-between border-b-[1px] border-opacity-40 border-pribla ">
+    <div className=" max-w-[2460px] bg-pribla pr-2 pl-0 z-30  md:px-8 mx-auto h-16 w-full flex items-center justify-between border-b-[1px] border-opacity-40 border-pribla ">
       <Link to="/">
         <img
-          className=" w-24 md:h-14 md:w-auto bg-transparent"
+          className=" w-24 md:h-14 md:w-auto bg-transparent" 
           src={logo}
           alt=""
         />

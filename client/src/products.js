@@ -16,6 +16,19 @@ export const bookSubTypes = [
     "Planners",
   ];
 
+  export const bookBrands = [
+    "Penguin Random House",
+    "HarperCollins",
+    "Simon & Schuster",
+    "Hachette Book Group",
+    "Macmillan Publishers",
+    "Scholastic Corporation",
+    "Pearson Education",
+    "Oxford University Press",
+    "Bloomsbury Publishing",
+    "Random House",
+  ];
+
   export const penSubtypes = [
     "Pencil",
     "Ballpoint",
@@ -60,18 +73,7 @@ export const bookSubTypes = [
     'Sticky Notes'
   ];
 
-  export const bookBrands = [
-    "Penguin Random House",
-    "HarperCollins",
-    "Simon & Schuster",
-    "Hachette Book Group",
-    "Macmillan Publishers",
-    "Scholastic Corporation",
-    "Pearson Education",
-    "Oxford University Press",
-    "Bloomsbury Publishing",
-    "Random House",
-  ];
+ 
 
   export const penBrands = [
     "Bic",
