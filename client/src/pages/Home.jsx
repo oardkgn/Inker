@@ -122,7 +122,7 @@ function Home() {
           </Swiper>
         </div>
       </div>
-      <div className=" h-[700px] px-20 mx-auto flex z-30   flex-col">
+      <div className=" mb-20  h-[700px] px-20 mx-auto flex z-30   flex-col">
         <h1 className=" text-4xl text-pribla font-semibold bg-sticky1 bg-contain bg-no-repeat flex p-8 -ml-4 items-center justify-start ">
           {" "}
           <span className=" ml-12">Best Ratings</span>{" "}

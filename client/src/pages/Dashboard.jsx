@@ -67,12 +67,26 @@ function Dashboard() {
       console.log(error);
     }
   };
-  const handleReviews = () => {
+  const handleReviews = async(page) => {
     setTab("reviews");
     navigate("/dashboard/reviews");
     setItems([]);
     setTotalPages(1);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/admin/getReviews`,
+        { page: page },
+        {
+          withCredentials: true,
+        }
+      );
+      setItems(res.data.data)
+      setTotalPages(Math.ceil(res.data.total_reviews / 10));
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   const handleOrders = () => {
     setTab("orders");
     navigate("/dashboard/orders");
@@ -85,6 +99,8 @@ function Dashboard() {
       handleUsers(1);
     }else if(tab == "products"){
       handleProducts(1);
+    }else if(tab == "reviews"){
+      handleReviews(1)
     }
   }, []);
 
@@ -103,6 +119,11 @@ function Dashboard() {
       }
     }
   }, [page]);
+
+  useEffect(() => {
+    handleUsers(1)
+  }, [])
+  
 
   const makeSearch = async (e) => {
     if (e) {
@@ -137,6 +158,20 @@ function Dashboard() {
       } catch (error) {
         console.log(error);
       }
+    } else if (tab == "reviews") {
+      try {
+        const findedReviews = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/admin/review/search/${searchText}`,
+          { page: page },
+          {
+            withCredentials: true,
+          }
+        );
+        setTotalPages(Math.ceil(findedReviews.data.total_reviews / 10));
+        setItems(findedReviews.data.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -147,6 +182,8 @@ function Dashboard() {
       handleUsers(1);
     } else if (tab == "products") {
       handleProducts(1);
+    } else if (tab == "reviews") {
+      handleReviews(1);
     }
   };
 
@@ -190,7 +227,7 @@ function Dashboard() {
               <MdSell size={20} className=" bg-transparent" />
             </button>
             <button
-              onClick={handleReviews}
+              onClick={() => handleReviews(1)}
               className={
                 tab == "reviews"
                   ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"

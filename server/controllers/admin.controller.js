@@ -48,15 +48,72 @@ export const searchUsers = async (req, res) => {
   });
 };
 
-
-
 export const deleteUser = async (req, res) => {
   const userEmail = req.params.email;
   const q = "DELETE FROM users WHERE `email` = ?";
 
   db.query(q, [userEmail], (err, data) => {
-    if (err) return res.status(403).json("You can delete only your post!");
+    if (err) return res.status(403).json({message:"Something went wrong when deleting user.",err});
 
-    return res.json("Post has been deleted!");
+    return res.json("User has been deleted!");
+  });
+};
+
+export const getReviews = async (req, res) => {
+  const q = `
+  SELECT COUNT(*) AS total_reviews FROM reviews;
+    `;
+  db.query(q, (err, data) => {
+    const total_reviews = data[0].total_reviews
+    if (err) return res.status(403).json("Something went wrong when counting!");
+    const q = `
+      SELECT * 
+      FROM reviews
+      ORDER BY comment_time DESC
+      LIMIT ? OFFSET ?
+    `;
+    db.query(q, [10, req.body.page * 10 - 10], (err, data) => {
+      if (err) return res.status(403).json("Something went wrong!");
+      return res.status(200).json({ data, total_reviews });
+    });
+  });
+};
+
+export const deleteReview = async (req, res) => {
+  const revId = req.params.id;
+  console.log(revId);
+  const q = "DELETE FROM reviews WHERE `id` = ?";
+
+  db.query(q, [revId], (err, data) => {
+    if (err) return res.status(403).json({message:"Something went wrong when deleting review.",err});
+
+    return res.json("Review has been deleted!");
+  });
+};
+
+export const searchReviews = async (req, res) => {
+  const q = `
+    SELECT COUNT(*) AS total_reviews
+      FROM reviews
+      WHERE user_email LIKE ?
+    `;
+  db.query(q, [`%${req.params.text}%`], (err, data) => {
+    if (err) return res.status(403).json({message:"Something went wrong when counting reviews!",err});
+    const total_reviews = data[0].total_reviews;
+    const q = `
+      SELECT *
+      FROM reviews
+      WHERE user_email LIKE ?
+      LIMIT ? OFFSET ?
+    `;
+    db.query(
+      q,
+      [`%${req.params.text}%`, 10, req.body.page * 10 - 10],
+      (err, data) => {
+        if (err)
+          return res.status(403).json({message:"Something went wrong when searching!"});
+        return res.status(200).json({ data, total_reviews });
+      }
+    );
   });
 };

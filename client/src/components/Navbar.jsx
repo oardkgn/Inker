@@ -5,10 +5,13 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { FiSearch } from "react-icons/fi";
 import { FaShoppingBasket } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import CartModal from "./CartModal.jsx";
 
 function Navbar() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, showCart,setShowCart } = useContext(AuthContext);
   const [user, setUser] = useState(null);
+  const [amountCartItem, setAmountCartItem] = useState(0);
+  
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
@@ -69,11 +72,11 @@ function Navbar() {
           </Link>
         ):("")}
         {user && (
-          <button className=" hidden md:block relative group p-4 ml-4 ">
+          <button onClick={() => setShowCart(!showCart)} className=" hidden md:block relative group p-4 ml-4 ">
             <div className="absolute bg-transparent top-0 left-0 text-priwhi transition-all group-hover:scale-110 text-3xl">
               <FaShoppingBasket className=" bg-transparent" />
               <div className="absolute -top-1 -right-2 bg-red-500 text-priwhi text-[12px] rounded-full w-5 flex items-center justify-center h-5">
-                1
+                {amountCartItem}
               </div>
             </div>
           </button>
@@ -84,6 +87,8 @@ function Navbar() {
           </div>
         </button>
       </div>
+      {showCart && <div className=" fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm"></div>  }
+      <CartModal setAmountCartItem={setAmountCartItem} currentUser={currentUser} showCart={showCart} setShowCart={setShowCart}  />
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { db } from "../index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
 export const update = async (req, res) => {
   if (req.user.email !== req.params.email)
     return res.status(401).json("You can only update your own account!");
@@ -90,4 +89,83 @@ export const deleteUser = async (req, res) => {
   });
 };
 
+export const likeProduct = async (req, res) => {
+  const q = "INSERT INTO likes (`user_email`, `product_id`) VALUES (?, ?)";
 
+  const values = [req.body.email, req.body.id];
+
+  db.query(q, values, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json({ data });
+  });
+};
+
+export const dislikeProduct = async (req, res) => {
+  const q = "DELETE FROM likes WHERE `user_email` = ? AND `product_id` = ?";
+  const values = [req.params.email, req.params.id];
+  db.query(q, values, (err, data) => {
+    if (err) return res.status(403).json("You can delete only your likes!");
+
+    return res.json("Like has been deleted!");
+  });
+};
+
+export const isLiked = async (req, res) => {
+  const q = "SELECT * FROM likes WHERE `user_email` = ? AND `product_id` = ?";
+
+  const values = [req.params.email, req.params.id];
+
+  db.query(q, values, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+export const getUserLikes = async (req, res) => {
+  const q = `
+  SELECT COUNT(*) as total_likes
+  FROM products p
+  JOIN likes l ON p.id = l.product_id
+  WHERE l.user_email = ?;
+`;
+  db.query(q, [req.params.email], (err, data) => {
+    const total_likes = data[0].total_likes;
+    if (err) return res.status(403).json("Something went wrong when counting!");
+    const q = `
+    SELECT p.*
+    FROM products p
+    JOIN likes l ON p.id = l.product_id
+    WHERE l.user_email = ?
+    LIMIT ? OFFSET ?;`;
+    db.query(q, [req.params.email, 8, req.body.page * 8 - 8], (err, data) => {
+      if (err)
+        return res.status(403).json({ message: "Something went wrong!", err });
+      return res.status(200).json({ data, total_likes: total_likes });
+    });
+  });
+};
+
+export const addToCart = async (req, res) => {
+  const q = "INSERT INTO carts (`cart_owner`, `product_id`) VALUES (?, ?)";
+
+  const values = [req.body.email, req.body.id];
+
+  db.query(q, values, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json({ data });
+  });
+};
+
+export const getCartItems = async (req, res) => {
+  const q = `
+  SELECT p.*
+  FROM products p
+  JOIN carts c ON p.id = c.product_id
+  WHERE c.cart_owner = ?;
+`;
+  db.query(q, [req.params.email], (err, data) => {
+    if (err)
+      return res.status(403).json({ message: "Something went wrong!", err });
+    return res.status(200).json(data);
+  });
+};

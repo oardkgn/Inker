@@ -16,34 +16,21 @@ function OneProductPage() {
   const [review, setReview] = useState({
     rating: 0,
     comment: "",
-    product_id:"",
-    user_email:""
+    product_id: "",
+    user_email: "",
   });
   let { id } = useParams();
   const { currentUser } = useContext(AuthContext);
 
-  const getRating = () => { // burayı degiştirecek
-    if (product.reviews) {
-      const numberOfRating = product.reviews.split(" ")[0];
-
-      if (0 == numberOfRating) {
-        setRating(0);
-      } else {
-        const arr = product.reviews.split(" ");
-        arr.shift();
-        let total = 0;
-        arr.forEach((e) => {
-          total += parseFloat(e);
-        });
-        const rating = (
-          Math.round((total / numberOfRating) * 100) / 100
-        ).toFixed(2);
-        setRating(rating);
-      }
+  const getRating = () => {
+    if (product.rating == 0) {
+      setRating(0);
+    } else {
+      setRating(product.rating);
     }
   };
 
-  console.log(review);
+
 
   const getProduct = async () => {
     try {
@@ -91,7 +78,7 @@ function OneProductPage() {
   const handleRating = (rate) => {
     setReview({ ...review, rating: rate });
   };
-  console.log(reviews);
+
 
   const makeReview = async (e) => {
     e.preventDefault();
@@ -104,13 +91,18 @@ function OneProductPage() {
         }
       );
       setReview({
-        rating:0,
-        comment:""
-      })
+        rating: 0,
+        comment: "",
+      });
       setAddingReview(false);
       getReviews();
-      setReview({...review,product_id:product.id,user_email:currentUser.email})
-      console.log(res);
+      setReview({
+        ...review,
+        product_id: product.id,
+        user_email: currentUser.email,
+      });
+      
+      window.location.reload()
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +114,11 @@ function OneProductPage() {
   }, []);
   useEffect(() => {
     getRating();
-    setReview({...review,product_id:product.id,user_email:currentUser.email})
+    setReview({
+      ...review,
+      product_id: product.id,
+      user_email: currentUser.email,
+    });
   }, [product]);
 
   return (
@@ -135,7 +131,7 @@ function OneProductPage() {
             alt=""
           />
         </div>
-        <div className=" text-pribla max-w-[600px] flex flex-col justify-between">
+        <div className=" text-pribla max-w-[600px] w-full flex flex-col justify-between">
           <div>
             <div className=" flex items-center gap-4">
               <h3 className=" text-4xl font-semibold">{product.name}</h3>
@@ -155,7 +151,7 @@ function OneProductPage() {
             <p>{product.brand}</p>
             <p className=" mt-6  ">{product.description}</p>
             <div>
-              {rating <= 5 && rating >= 4.5 && (
+              {rating <= 5 && rating > 4.5 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-green-800`}
                 >
@@ -163,7 +159,7 @@ function OneProductPage() {
                   <FaRegStar className=" bg-transparent" />
                 </div>
               )}
-              {rating <= 4.5 && rating >= 4 && (
+              {rating <= 4.5 && rating > 4 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-green-500`}
                 >
@@ -171,7 +167,7 @@ function OneProductPage() {
                   <FaRegStar className=" bg-transparent" />
                 </div>
               )}
-              {rating <= 4 && rating >= 3.5 && (
+              {rating <= 4 && rating > 3.5 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-green-300`}
                 >
@@ -179,7 +175,7 @@ function OneProductPage() {
                   <FaRegStar className=" bg-transparent" />
                 </div>
               )}
-              {rating <= 3.5 && rating >= 3 && (
+              {rating <= 3.5 && rating > 3 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-yellow-400`}
                 >
@@ -187,7 +183,7 @@ function OneProductPage() {
                   <FaRegStar className=" bg-transparent" />
                 </div>
               )}
-              {rating <= 3 && rating >= 2.5 && (
+              {rating <= 3 && rating > 2.5 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-yellow-700`}
                 >
@@ -195,7 +191,7 @@ function OneProductPage() {
                   <FaRegStar className=" bg-transparent" />
                 </div>
               )}
-              {rating <= 2.5 && rating >= 2 && (
+              {rating <= 2.5 && rating > 2 && (
                 <div
                   className={`my-6 py-2 px-4 text-2xl w-fit flex items-center gap-2 rounded-lg text-priwhi bg-red-500`}
                 >
@@ -229,17 +225,19 @@ function OneProductPage() {
         <div className=" flex-1 flex flex-col justify-between">
           <div>
             <h5 className=" text-2xl font-semibold mb-2 ">Reviews</h5>
-            <div className=" flex flex-col gap-2 overflow-y-scroll max-h-[500px]">{rating == 0 && <p>There are no reviews yet.</p>}
-              {reviews.length != 0 && reviews.map((review,key) => {
-                return (<OneReview key={key} review={review}/>)
-              })}
+            <div className=" flex flex-col gap-2 overflow-y-scroll max-h-[500px]">
+              {rating == 0 && <p>There are no reviews yet.</p>}
+              {reviews.length != 0 &&
+                reviews.map((review, key) => {
+                  return <OneReview key={key} review={review} />;
+                })}
             </div>
           </div>
           <div className=" relative">
             {addingReview && (
               <div className=" absolute  -top-32 right-0 bg-transparent flex justify-end">
                 <form
-                  onSubmit={e => makeReview(e)}
+                  onSubmit={(e) => makeReview(e)}
                   className=" relative text-pribla p-2 flex gap-2 mb-2  border border-pribla w-[360px] rounded-lg"
                   action=""
                 >

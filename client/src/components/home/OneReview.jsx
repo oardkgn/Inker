@@ -32,7 +32,8 @@ function OneReview({ review }) {
         <h1 className=" bg-transparent text-xl p-2 font-semibold">
           {review.user_email}
         </h1>
-        <div className=" bg-transparent flex">{ratingStars}</div>
+        <div className=" bg-transparent flex mr-auto">{ratingStars}</div>
+        {review.comment_time && <p className=" text-sm text-gray-500 bg-transparent">{review.comment_time.split("T")[0]}</p>}
       </div>
       <p className=" bg-white bg-opacity-10 p-2 rounded-lg">{review.comment}</p>
     </div>
