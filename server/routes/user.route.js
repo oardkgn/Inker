@@ -1,5 +1,5 @@
 import express from "express";
-import { addToCart, deleteUser, dislikeProduct, getCartItems, getUserLikes, isLiked, likeProduct, update } from "../controllers/user.controller.js";
+import { addToCart, delCart, deleteUser, dislikeProduct, getCartItems, getUserLikes, getUserOrders, isLiked, likeProduct, makeOrder, update } from "../controllers/user.controller.js";
 import { verifyAdmin, verifyToken } from "../utils.js";
 import { deleteUserReview, getUserReviews } from "../controllers/review.controller.js";
 
@@ -14,8 +14,11 @@ router.post("/like", verifyToken, likeProduct);
 router.delete("/dislike/:id,:email", verifyToken, dislikeProduct);
 router.get("/findLiked/:id,:email", verifyToken, isLiked);
 router.post("/getUserLikes/:email", verifyToken, getUserLikes);
+router.get("/getUserOrders/:email", verifyToken, getUserOrders);
 router.post("/addToCart", verifyToken, addToCart);
 router.get("/getCartItems/:email", verifyToken, getCartItems);
+router.post("/makeOrder", verifyToken, makeOrder);
+router.delete("/delCart/:email", verifyToken, delCart);
 
 
 export default router;

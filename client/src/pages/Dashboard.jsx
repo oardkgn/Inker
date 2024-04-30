@@ -3,7 +3,7 @@ import { FaUsers } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdSell } from "react-icons/md";
 import { MdRateReview } from "react-icons/md";
-import { useLocation } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import { MdLocalShipping } from "react-icons/md";
 import axios from "axios";
 import { IoCaretBack, IoCaretForward } from "react-icons/io5";
@@ -24,7 +24,9 @@ function Dashboard() {
   const [items, setItems] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const location = useLocation();
-  const [tab, setTab] = useState(location.pathname.split("/")[location.pathname.split("/").length - 1]);
+  const [tab, setTab] = useState(
+    location.pathname.split("/")[location.pathname.split("/").length - 1]
+  );
 
   const navigate = useNavigate();
 
@@ -67,7 +69,7 @@ function Dashboard() {
       console.log(error);
     }
   };
-  const handleReviews = async(page) => {
+  const handleReviews = async (page) => {
     setTab("reviews");
     navigate("/dashboard/reviews");
     setItems([]);
@@ -80,27 +82,71 @@ function Dashboard() {
           withCredentials: true,
         }
       );
-      setItems(res.data.data)
+      setItems(res.data.data);
       setTotalPages(Math.ceil(res.data.total_reviews / 10));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleOrders = () => {
+  function groupOrders(orders) {
+    const groupedOrders = {};
+
+    orders.forEach((order) => {
+      const { order_id, amount, images, name, price, total_price, order_time } =
+        order;
+
+      if (!groupedOrders[order_id]) {
+        groupedOrders[order_id] = {
+          names: [],
+          prices: [],
+          amounts: [],
+          prices: [],
+          images: [],
+          order_time,
+          total_price,
+        };
+      }
+
+      groupedOrders[order_id].names.push(name);
+      groupedOrders[order_id].amounts.push(amount);
+      groupedOrders[order_id].prices.push(price); // Assuming price is the same as amount in your example
+      groupedOrders[order_id].images.push(images);
+    });
+
+    return groupedOrders;
+  }
+
+  const handleOrders = async () => {
     setTab("orders");
     navigate("/dashboard/orders");
     setItems([]);
     setTotalPages(1);
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/admin/getOrders`,
+        {
+          withCredentials: true,
+        }
+      );
+      const groupedOrders = groupOrders(res.data.data);
+      let arr = [];
+      Object.entries(groupedOrders).forEach((item) => arr.push(item))
+      setItems(arr);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     if (tab == "users") {
       handleUsers(1);
-    }else if(tab == "products"){
+    } else if (tab == "products") {
       handleProducts(1);
-    }else if(tab == "reviews"){
-      handleReviews(1)
+    } else if (tab == "reviews") {
+      handleReviews(1);
+    } else {
+      handleOrders();
     }
   }, []);
 
@@ -117,13 +163,24 @@ function Dashboard() {
       } else {
         makeSearch();
       }
+    } else if (tab == "reviews") {
+      if (searching == false) {
+        handleReviews(page);
+      } else {
+        makeSearch();
+      }
+    } else {
+      if (searching == false) {
+        handleOrders();
+      } else {
+        makeSearch();
+      }
     }
   }, [page]);
 
   useEffect(() => {
-    handleUsers(1)
-  }, [])
-  
+    handleUsers(1);
+  }, []);
 
   const makeSearch = async (e) => {
     if (e) {
@@ -172,6 +229,23 @@ function Dashboard() {
       } catch (error) {
         console.log(error);
       }
+    } else {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/admin/orders/search/${searchText}`,
+          {
+            withCredentials: true,
+          }
+        );
+        const groupedOrders = groupOrders(res.data.data);
+        let arr = [];
+        setItems(
+          Object.entries(groupedOrders).forEach((item) => arr.push(item))
+        );
+        setItems(arr);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -184,13 +258,15 @@ function Dashboard() {
       handleProducts(1);
     } else if (tab == "reviews") {
       handleReviews(1);
+    }else{
+      handleOrders();
     }
   };
 
   return (
     <div className=" max-w-[2440px] mx-auto p-8">
       <CreateProduct
-      type="Create"
+        type="Create"
         setShowProductModal={setShowProductModal}
         showProductModal={showProductModal}
         setShowNot={setShowNot}
@@ -238,7 +314,7 @@ function Dashboard() {
               <MdRateReview size={20} className=" bg-transparent" />
             </button>
             <button
-              onClick={handleOrders}
+              onClick={() => handleOrders()}
               className={
                 tab == "orders"
                   ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"
@@ -295,7 +371,8 @@ function Dashboard() {
 
             {/* pagination */}
 
-            <div className=" gap-2 bg-transparent flex items-center">
+            {tab != "orders" &&
+              <div className=" gap-2 bg-transparent flex items-center">
               {page != 1 && (
                 <button
                   onClick={() => setPage(page - 1)}
@@ -350,16 +427,10 @@ function Dashboard() {
                 </button>
               )}
             </div>
+            }
           </div>
           <div className=" mt-4 flex flex-col gap-4">
-            <Outlet
-              context={[
-                items,
-                setItems,
-                setShowNot,
-                setNotify,
-              ]}
-            />
+            <Outlet context={[items, setItems, setShowNot, setNotify]} />
           </div>
         </div>
       </div>

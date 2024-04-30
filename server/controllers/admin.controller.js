@@ -53,7 +53,10 @@ export const deleteUser = async (req, res) => {
   const q = "DELETE FROM users WHERE `email` = ?";
 
   db.query(q, [userEmail], (err, data) => {
-    if (err) return res.status(403).json({message:"Something went wrong when deleting user.",err});
+    if (err)
+      return res
+        .status(403)
+        .json({ message: "Something went wrong when deleting user.", err });
 
     return res.json("User has been deleted!");
   });
@@ -64,7 +67,7 @@ export const getReviews = async (req, res) => {
   SELECT COUNT(*) AS total_reviews FROM reviews;
     `;
   db.query(q, (err, data) => {
-    const total_reviews = data[0].total_reviews
+    const total_reviews = data[0].total_reviews;
     if (err) return res.status(403).json("Something went wrong when counting!");
     const q = `
       SELECT * 
@@ -85,7 +88,10 @@ export const deleteReview = async (req, res) => {
   const q = "DELETE FROM reviews WHERE `id` = ?";
 
   db.query(q, [revId], (err, data) => {
-    if (err) return res.status(403).json({message:"Something went wrong when deleting review.",err});
+    if (err)
+      return res
+        .status(403)
+        .json({ message: "Something went wrong when deleting review.", err });
 
     return res.json("Review has been deleted!");
   });
@@ -98,7 +104,10 @@ export const searchReviews = async (req, res) => {
       WHERE user_email LIKE ?
     `;
   db.query(q, [`%${req.params.text}%`], (err, data) => {
-    if (err) return res.status(403).json({message:"Something went wrong when counting reviews!",err});
+    if (err)
+      return res
+        .status(403)
+        .json({ message: "Something went wrong when counting reviews!", err });
     const total_reviews = data[0].total_reviews;
     const q = `
       SELECT *
@@ -111,9 +120,44 @@ export const searchReviews = async (req, res) => {
       [`%${req.params.text}%`, 10, req.body.page * 10 - 10],
       (err, data) => {
         if (err)
-          return res.status(403).json({message:"Something went wrong when searching!"});
+          return res
+            .status(403)
+            .json({ message: "Something went wrong when searching!" });
         return res.status(200).json({ data, total_reviews });
       }
     );
   });
+};
+
+export const getOrders = async (req, res) => {
+  const q = `
+  SELECT order_id,amount,images,name,order_time,o.price,total_price
+  FROM products p
+  JOIN orders o ON p.id = o.product_id
+  ORDER BY order_time DESC;
+ `;
+  db.query(q, [req.params.email], (err, data) => {
+    if (err)
+      return res.status(403).json({ message: "Something went wrong!", err });
+    return res.status(200).json({ data });
+  });
+};
+
+export const searchOrders = async (req, res) => {
+  const q = `
+    SELECT order_id,amount,images,name,order_time,o.price,total_price
+    FROM products p
+    JOIN orders o ON p.id = o.product_id
+    WHERE user_email LIKE ?
+    ORDER BY order_time DESC;
+    `;
+  db.query(
+    q,
+    [`%${req.params.text}%`],
+    (err, data) => {
+      if (err)
+      return res.status(403).json({ message: "Something went wrong!", err });
+    return res.status(200).json({ data });
+    }
+  );
 };

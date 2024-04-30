@@ -156,6 +156,15 @@ export const addToCart = async (req, res) => {
   });
 };
 
+export const delCart = async (req, res) => {
+  const q = "DELETE FROM carts WHERE `cart_owner` = ?";
+  console.log(req.params.email);
+  db.query(q, [req.params.email], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
 export const getCartItems = async (req, res) => {
   const q = `
   SELECT p.*
@@ -167,5 +176,49 @@ export const getCartItems = async (req, res) => {
     if (err)
       return res.status(403).json({ message: "Something went wrong!", err });
     return res.status(200).json(data);
+  });
+};
+
+export const makeOrder = async (req, res) => {
+  const orders = req.body.orders;
+  console.log(orders);
+  const res1 = await orders.forEach((order) => {
+      const q =
+        "INSERT INTO orders (`order_id`, `user_email`, `product_id`, `amount`, `price`, `total_price`, `order_time`) VALUES (?, ?, ?, ?, ?, ?, NOW());";
+    
+      const values = [
+        order.order_id,
+        req.user.email,
+        order.product_id,
+        order.amount,
+        order.price,
+        order.totalPrice,
+      ];
+      try {
+        db.query(q, values, (err, data) => {
+          console.log(data);
+          
+          if (err) throw err;
+         
+        });
+      } catch (error) {
+        res.status(401).json(err)
+      }
+    });
+    return res.status(200).json({ message: "Order created successfully." });
+};
+
+export const getUserOrders = async (req, res) => {
+  const q = `
+    SELECT order_id,amount,images,name,order_time,o.price,total_price
+    FROM products p
+    JOIN orders o ON p.id = o.product_id
+    WHERE o.user_email = ?
+    ORDER BY order_time DESC;
+   `;
+  db.query(q, [req.params.email], (err, data) => {
+    if (err)
+      return res.status(403).json({ message: "Something went wrong!", err });
+    return res.status(200).json({ data });
   });
 };
