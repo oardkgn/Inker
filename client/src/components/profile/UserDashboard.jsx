@@ -125,9 +125,9 @@ function UserDashboard() {
     if (item[1].names.length != 0) {
       for (let i = 0; i < item[1].names.length; i++) {
         arr.push(
-          <div className=" bg-transparent" key={item[1].names[i]}>
+          <div className=" bg-transparent max-w-40" key={item[1].names[i]}>
             <img
-              className=" rounded-md  h-48 w-full"
+              className=" rounded-md  h-48 w-full object-cover"
               src="https://m.media-amazon.com/images/I/81i1-a1lq9L._AC_UF1000,1000_QL80_.jpg"
               alt=""
             />

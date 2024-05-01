@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import logo from "../assets/inkerLogo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { FiSearch } from "react-icons/fi";
 import { FaShoppingBasket } from "react-icons/fa";
@@ -10,7 +10,16 @@ import CartModal from "./CartModal.jsx";
 function Navbar() {
   const { currentUser, showCart,setShowCart } = useContext(AuthContext);
   const [user, setUser] = useState(null);
+  const [searchText, setSearchText] = useState("");
   const [amountCartItem, setAmountCartItem] = useState(0);
+  const navigate = useNavigate()
+  console.log(searchText);
+  
+  
+  const makeSearch = async(e) => {
+    e.preventDefault();
+    navigate(`/search/${searchText}`)
+  }
   
   useEffect(() => {
     setUser(currentUser);
@@ -27,14 +36,21 @@ function Navbar() {
         />
       </Link>
       <div className=" bg-transparent relative flex-1 flex gap-0 lg:gap-8 items-center justify-end">
+        <form className=" bg-transparent flex items-center w-full max-w-[390px]" onSubmit={e => makeSearch(e)} action="">
         <input
+        onChange={e => setSearchText(e.target.value)}
+        minLength={3}
+        required
+        value={searchText}
           className=" w-full max-w-[390px] bg-white p-2 outline-none rounded-md shadow-md"
           placeholder="Search"
           type="text"
         />
+        
         <button className="absolute  right-2 lg:right-11 p-2 pr-0 group">
           <FiSearch className=" group-hover:scale-110 transition-all  bg-transparent " />
         </button>
+        </form>
         <div className=" bg-pribla w-[1px] h-8 rounded-full"></div>
       </div>
       <div className=" bg-transparent text-priwhi flex items-center text-xl">

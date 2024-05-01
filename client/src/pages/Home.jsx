@@ -4,6 +4,12 @@ import React, { useState, useEffect } from "react";
 import homebg from "../assets/homebg.png";
 import homeClock from "../assets/homeClock.png";
 import homeSticky from "../assets/homeSticky.png";
+import books from "../assets/books.png";
+import office from "../assets/office.png";
+import pens from "../assets/pens.png";
+import stationary from "../assets/stationary.png";
+import calendar from "../assets/calendar.png";
+import lamp from "../assets/lamp.png";
 import table from "../assets/table.png";
 import axios from "axios";
 import OneProduct from "../components/home/OneProduct";
@@ -61,7 +67,7 @@ function Home() {
   }, []);
 
   return (
-    <div className=" max-w-[2460px] overflow-hidden  mx-auto ">
+    <div className=" max-w-[2460px] pb-[500px] relative overflow-hidden  mx-auto ">
       <div className="relative bg-transparent z-20 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] 2xl:h-[960px] max-w-[1840px] mx-auto">
         <img
           className="absolute bottom-0 w-full max-h-full bg-transparent z-10 "
@@ -99,14 +105,23 @@ function Home() {
           </button>
         </div>
       </div>
-      <div className="mb-20 bg-transparent px-20 mx-auto flex -mt-28 z-30   flex-col">
+      <div className=" w-1/2 mx-auto h-[400px] grid grid-cols-4 gap-2 -mt-28 mb-20 text-2xl font-light">
+        <button className=" transition-all hover:rotate-6"><img src={books} alt="" /><span>Books</span></button>
+        <button className=" transition-all hover:rotate-6"><img src={pens} alt="" /><span>Pens</span></button>
+        <button className=" transition-all hover:rotate-6"><img src={office} alt="" /><span>Office</span></button>
+        <button className=" transition-all hover:rotate-6"><img src={stationary} alt="" /><span>Stationary</span></button>
+      </div>
+      <img src={table} className=" top-[1300px] right-4 absolute w-[900px]" alt="" />
+      <img src={calendar} className=" top-[2100px] left-4 absolute w-[900px]" alt="" />
+      <img src={lamp} className=" top-[2700px] -right-16 absolute w-[900px]" alt="" />
+      <div className="bg-transparent px-20 mx-auto flex z-30   flex-col">
         <h1 className=" text-4xl text-pribla font-semibold bg-sticky1 z-20 bg-transparent bg-contain bg-no-repeat flex p-8 -ml-4 items-center justify-start ">
           {" "}
           <span className=" ml-12">Most Populars</span>{" "}
         </h1>
-        <div className=" bg-transparent mt-4 ">
+        <div className=" bg-transparent mt-6 ">
           <Swiper
-            className=" px-12 bg-transparent "
+            className=" px-12 bg-transparent  "
             spaceBetween={20}
             navigation={true}
             modules={[Navigation]}
@@ -122,22 +137,22 @@ function Home() {
           </Swiper>
         </div>
       </div>
-      <div className=" mb-20  h-[700px] px-20 mx-auto flex z-30   flex-col">
+      <div className=" mt-20 px-20 mx-auto flex z-30   flex-col">
         <h1 className=" text-4xl text-pribla font-semibold bg-sticky1 bg-contain bg-no-repeat flex p-8 -ml-4 items-center justify-start ">
           {" "}
           <span className=" ml-12">Best Ratings</span>{" "}
         </h1>
-        <div className=" relative mt-4 ">
+        <div className="bg-transparent relative mt-8 ">
           <Swiper
-            className=" w-full px-12"
-            spaceBetween={50}
+            className="bg-transparent w-full px-12 mt-6"
+            spaceBetween={20}
             navigation={true}
             modules={[Navigation,Pagination]}
             slidesPerView={5}
           >
             {topRateds.map((product, key) => {
               return (
-                <SwiperSlide key={key}>
+                <SwiperSlide className=" p-4 bg-transparent rounded-lg backdrop-blur-md" key={key}>
                   <OneProduct product={product} />
                 </SwiperSlide>
               );
@@ -145,22 +160,22 @@ function Home() {
           </Swiper>
         </div>
       </div>
-      <div className=" pb-20 px-20 mx-auto flex z-30   flex-col">
+      <div className="px-20 mt-20 mx-auto flex z-30   flex-col">
         <h1 className=" text-4xl text-pribla font-semibold bg-sticky1 bg-contain bg-no-repeat flex p-8 -ml-4 items-center justify-start ">
           {" "}
           <span className=" ml-12">New Products</span>{" "}
         </h1>
-        <div className=" relative mt-4 ">
+        <div className=" bg-transparent relative mt-6 ">
           <Swiper
-            className=" w-full px-12"
-            spaceBetween={50}
+            className=" bg-transparent w-full px-12 mt-5"
+            spaceBetween={20}
             navigation={true}
             modules={[Navigation,Pagination]}
             slidesPerView={5}
           >
             {newProducts.map((product, key) => {
               return (
-                <SwiperSlide key={key}>
+                <SwiperSlide className=" p-4 bg-transparent rounded-lg backdrop-blur-md"  key={key}>
                   <OneProduct product={product} />
                 </SwiperSlide>
               );

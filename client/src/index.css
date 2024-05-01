@@ -22,6 +22,10 @@ a {
   }
 } */
 
+.swiper-wrapper{
+  background-color:transparent;
+  }
+
 svg.star-svg {
   display: inline;
 }

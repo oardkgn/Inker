@@ -181,8 +181,8 @@ export const getCartItems = async (req, res) => {
 
 export const makeOrder = async (req, res) => {
   const orders = req.body.orders;
-  console.log(orders);
-  const res1 = await orders.forEach((order) => {
+  orders.forEach((order) => {
+    try {
       const q =
         "INSERT INTO orders (`order_id`, `user_email`, `product_id`, `amount`, `price`, `total_price`, `order_time`) VALUES (?, ?, ?, ?, ?, ?, NOW());";
     
@@ -194,12 +194,10 @@ export const makeOrder = async (req, res) => {
         order.price,
         order.totalPrice,
       ];
-      try {
+      
         db.query(q, values, (err, data) => {
           console.log(data);
-          
           if (err) throw err;
-         
         });
       } catch (error) {
         res.status(401).json(err)
@@ -220,5 +218,33 @@ export const getUserOrders = async (req, res) => {
     if (err)
       return res.status(403).json({ message: "Something went wrong!", err });
     return res.status(200).json({ data });
+  });
+};
+
+export const searchProducts = async (req, res) => {
+  console.log(req.params.text);
+  const q = `
+      SELECT COUNT(*) AS total_products
+        FROM products
+        WHERE CONCAT(name, ' ', type, ' ', subtypes) LIKE ?
+      `;
+  db.query(q, [`%${req.params.text}%`], (err, data) => {
+    if (err) return res.status(403).json("Something went wrong when counting!");
+    const totalProducts = data[0].total_products;
+    const q = `
+        SELECT *
+        FROM products
+        WHERE CONCAT(name, ' ', type, ' ', subtypes) LIKE ?
+        LIMIT ? OFFSET ?
+      `;
+    db.query(
+      q,
+      [`%${req.params.text}%`, 10, req.body.page * 10 - 10],
+      (err, data) => {
+        if (err)
+          return res.status(403).json("Something went wrong when searching!");
+        return res.status(200).json({ products: data, totalProducts });
+      }
+    );
   });
 };

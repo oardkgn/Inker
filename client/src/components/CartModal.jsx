@@ -23,7 +23,6 @@ function CartModal({ showCart, setShowCart, currentUser, setAmountCartItem }) {
       setAmountCartItem(res.data.length);
       setItems(res.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -44,7 +43,6 @@ function CartModal({ showCart, setShowCart, currentUser, setAmountCartItem }) {
     }
   };
 
-  console.log(items,prices);
 
   const handleOrder = async () => {
     if (items.length) {
@@ -121,6 +119,7 @@ function CartModal({ showCart, setShowCart, currentUser, setAmountCartItem }) {
   useEffect(() => {
     getTotal();
   }, [items]);
+
 
 
   return (

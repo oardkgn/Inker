@@ -28,70 +28,64 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   const productId = req.params.id;
-    const q = `
+  const q = `
         SELECT * 
         FROM products
         WHERE id=?
       `;
-    db.query(q, [productId], (err, data) => {
-
-      if (err)
-        return res
-          .status(403)
-          .json("Something went wrong when fetching page product!");
-      return res.status(200).json(data[0]);
-    });
-
+  db.query(q, [productId], (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json("Something went wrong when fetching page product!");
+    return res.status(200).json(data[0]);
+  });
 };
 export const getTopSellerProducts = async (req, res) => {
-    const q = `
+  const q = `
         SELECT * 
         FROM products
         ORDER BY sells DESC
         LIMIT 15
       `;
-    db.query(q, (err, data) => {
-      if (err)
-        return res
-          .status(403)
-          .json("Something went wrong when fetching page product!");
-      return res.status(200).json({ products: data });
-    });
-
+  db.query(q, (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json("Something went wrong when fetching page product!");
+    return res.status(200).json({ products: data });
+  });
 };
 export const getTopRatedProducts = async (req, res) => {
-    const q = `
+  const q = `
         SELECT * 
         FROM products
         ORDER BY rating DESC
         LIMIT 15
       `;
-    db.query(q, (err, data) => {
-      if (err)
-        return res
-          .status(403)
-          .json("Something went wrong when fetching rated page product!");
-      return res.status(200).json({ products: data });
-    });
-
+  db.query(q, (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json("Something went wrong when fetching rated page product!");
+    return res.status(200).json({ products: data });
+  });
 };
 export const getNewProducts = async (req, res) => {
-    const q = `
+  const q = `
         SELECT * 
         FROM products
         ORDER BY created_at ASC
         LIMIT 15
       `;
-    db.query(q, (err, data) => {
-      if (err)
-        return res
-          .status(403)
-          .json("Something went wrong when fetching new product page product!");
-      return res.status(200).json({ products: data });
-    });
-
+  db.query(q, (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json("Something went wrong when fetching new product page product!");
+    return res.status(200).json({ products: data });
+  });
 };
-
 
 export const deleteProduct = async (req, res) => {
   const productId = req.params.id;
@@ -224,7 +218,7 @@ export const updateProduct = async (req, res) => {
         req.body.stock,
         req.body.brand,
         images,
-        req.params.id
+        req.params.id,
       ];
       db.query(q, values, (err, data) => {
         if (err) return res.status(500).json(err);
@@ -237,3 +231,88 @@ export const updateProduct = async (req, res) => {
     return res.json(error);
   }
 };
+
+export const getAllProducts = async (req, res) => {
+  const q = `
+      SELECT COUNT(*) AS total_products FROM products;
+      `;
+  db.query(q, (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json("Something went wrong when fetching all products!");
+    const totalProducts = data[0].total_products;
+    const q = `
+        SELECT * 
+        FROM products
+        ORDER BY CONCAT(name, ' ', type)
+        LIMIT ? OFFSET ?
+      `;
+    db.query(q, [10, req.body.page * 10 - 10], (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json("Something went wrong when fetching page product!");
+      return res.status(200).json({ products: data, totalProducts });
+    });
+  });
+};
+
+export const getSubTypeProducts = async (req, res) => {
+  const q = `
+      SELECT COUNT(*) AS total_products FROM products WHERE subtypes LIKE ?;
+      `;
+  db.query(q, [`%${req.body.subType}%`], (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json(err);
+    const totalProducts = data[0].total_products;
+    const q = `
+        SELECT * 
+        FROM products
+        WHERE subtypes LIKE ?
+        ORDER BY CONCAT(name, ' ', type)
+        LIMIT ? OFFSET ?;
+      `;
+    db.query(q, [`%${req.body.subType}%`, 10, req.body.page * 10 - 10], (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json(err);
+      return res.status(200).json({ products: data, totalProducts });
+    });
+  });
+};
+export const getTypeProduct = async (req, res) => {
+  const q = `
+      SELECT COUNT(*) AS total_products FROM products WHERE type = ?;
+      `;
+      let page = req.body.page
+      if (req.body.page) {
+        page = 1
+      }
+  db.query(q, [req.body.type], (err, data) => {
+    if (err)
+      return res
+        .status(403)
+        .json(err);
+    const totalProducts = data[0].total_products;
+    const q = `
+        SELECT * 
+        FROM products
+        WHERE type = ?
+        ORDER BY CONCAT(name, ' ', type)
+        LIMIT ? OFFSET ?;
+      `;
+    db.query(q, [req.body.type, 10, (page * 10 - 10)], (err, data) => {
+      if (err)
+        return res
+          .status(403)
+          .json(err);
+      return res.status(200).json({ products: data, totalProducts });
+    });
+  });
+};
+
+

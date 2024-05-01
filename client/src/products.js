@@ -8,7 +8,7 @@ export const bookSubTypes = [
     "Romance",
     "Self-Help",
     "Cookbooks",
-    "Travel Guides",
+    "Travel-Guides",
     "Drama",
     "Horror",
     "Children's Books",
@@ -44,33 +44,33 @@ export const bookSubTypes = [
   ];
 
   export const officeSubtypes = [
-    'Desk Calendars',
-    'Pen Holders',
-    'Desk Clocks',
-    'Desk Organizers',
-    'Desk Fans',
-    'Desk Pads',
-    'Stationery Sets',
-    'Paper Shredders',
+    'Desk-Calendars',
+    'Pen-Holders',
+    'Desk-Clocks',
+    'Desk-Organizers',
+    'Desk-Fans',
+    'Desk-Pads',
+    'Stationery-Sets',
+    'Paper-Shredders',
     'Whiteboards',
-    'File Folders',
-    'Binder Dividers',
-    'Document Holders',
-    'Filing Cabinets',
-    'Expanding Files'
+    'File-Folders',
+    'Binder-Dividers',
+    'Document-Holders',
+    'Filing-Cabinets',
+    'Expanding-Files'
   ];
 
   export const stationarySubtypes = [
     'Crayons',
     'Markers',
-    'Colored Paper',
+    'Colored-Paper',
     'Sketchbooks',
-    'Glue Sticks',
+    'Glue-Sticks',
     'Erasers',
     'Highlighters',
-    'export Construction Paper',
-    'Craft Scissors',
-    'Sticky Notes'
+    'Construction-Paper',
+    'Craft-Scissors',
+    'Sticky-Notes'
   ];
 
  
@@ -80,7 +80,7 @@ export const bookSubTypes = [
     "Pilot",
     "Parker",
     "Uni-ball",
-    "Paper Mate",
+    "Paper-Mate",
     "Pentel",
     "Zebra",
     "Sharpie",

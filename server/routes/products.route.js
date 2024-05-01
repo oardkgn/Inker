@@ -2,11 +2,14 @@ import express from "express";
 import {
   createProduct,
   deleteProduct,
+  getAllProducts,
   getNewProducts,
   getProduct,
   getProducts,
+  getSubTypeProducts,
   getTopRatedProducts,
   getTopSellerProducts,
+  getTypeProduct,
   searchProducts,
   updateProduct,
 } from "../controllers/products.controller.js";
@@ -15,6 +18,9 @@ import { verifyAdmin, verifyToken } from "../utils.js";
 const router = express.Router();
 
 router.post("/getProducts", getProducts);
+router.post("/getAllProducts", getAllProducts);
+router.post("/getTypeProduct", getTypeProduct);
+router.post("/getSubTypeProducts", getSubTypeProducts);
 router.get("/getProduct/:id", getProduct);
 router.get("/getTopSellerProducts", getTopSellerProducts);
 router.get("/getTopRatedProducts", getTopRatedProducts);

@@ -12,6 +12,7 @@ import Products from "./components/dashboard/Products";
 import Reviews from "./components/dashboard/Reviews";
 import Orders from "./components/dashboard/Orders";
 import OneProductPage from "./components/OneProductPage";
+import Search from "./pages/Search";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +25,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/search/:text" element={<Search />} />
         <Route path="/product/:id" element={<OneProductPage />} />
         <Route path="/auth" element={<Auth />} />
         <Route element={<ReqLogin />}>
