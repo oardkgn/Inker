@@ -102,7 +102,7 @@ function UserUpdate() {
   }
 
   return (
-    <div className=" w-[600px] bg-pribla rounded-lg px-8 py-14">
+    <div className=" w-full max-w-[600px] md:max-w-[400px] bg-pribla rounded-lg px-8 py-14">
       <h1 className=" bg-transparent text-priwhi text-center text-2xl">
         Profile
       </h1>

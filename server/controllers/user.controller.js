@@ -158,8 +158,14 @@ export const addToCart = async (req, res) => {
 
 export const delCart = async (req, res) => {
   const q = "DELETE FROM carts WHERE `cart_owner` = ?";
-  console.log(req.params.email);
   db.query(q, [req.params.email], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+export const delCartItem = async (req, res) => {
+  const q = "DELETE FROM carts WHERE `cart_owner` = ? AND `product_id` = ?";
+  db.query(q, [req.params.email, req.params.id], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);
   });

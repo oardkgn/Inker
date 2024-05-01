@@ -27,15 +27,15 @@ function User({ user, setShowNot, setNotify, setUsers, users }) {
   }
 
   return (
-    <div className=" border flex items-center justify-between border-pribla p-4 rounded-lg w-full">
-      <div className=" flex gap-6 items-center">
+    <div className=" border flex gap-1 md:gap-2 items-center justify-between border-pribla p-4 rounded-lg w-full">
+      <div className=" flex gap-2 md:gap-6 flex-wrap items-center">
       <IoMdPerson size={30} />
-      <h3 className=" text-lg font-semibold">
+      <h3 className=" text-lg font-semibold whitespace-nowrap">
         {user.name} {user.surname}
       </h3>
       <h3>{user.email}</h3>
       </div>
-      <button onClick={handleDel} className=" transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi">
+      <button onClick={handleDel} className=" whitespace-nowrap transition-all hover:scale-105 justify-center rounded-lg p-3 flex items-center bg-red-600 text-priwhi">
         Delete Account
         <MdOutlineDelete size={24} className=" bg-transparent" />
       </button>

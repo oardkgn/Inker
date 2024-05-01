@@ -41,7 +41,7 @@ function Reviews() {
                 <div className=" w-full">
                   <OneReview review={item} />
                 </div>
-                <div className=" bg-pribla absolute flex gap-2 items-center top-2 right-20 rounded-lg">
+                <div className=" bg-pribla absolute flex gap-2 items-center top-2 md:right-20 right-2 rounded-lg">
                   <p className="bg-transparent text-priwhi top-3">
                     ProductId:{item.product_id}
                   </p>

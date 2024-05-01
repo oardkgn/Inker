@@ -12,7 +12,7 @@ function Orders() {
           <div className=" bg-transparent w-32 relative" key={item[1].names[i]}>
             <img
               className=" rounded-md  h-48 w-full"
-              src="https://m.media-amazon.com/images/I/81i1-a1lq9L._AC_UF1000,1000_QL80_.jpg"
+              src={item[1].images[i]}
               alt=""
             />
             <p className=" p-1 bg-transparent text-priwhi text-sm">
@@ -47,11 +47,11 @@ function Orders() {
             key={key}
             className="relative border-2 bg-pribla border-pribla p-4 rounded-lg flex justify-between"
           >
-            <div className=" flex gap-4 bg-transparent">
+            <div className=" flex flex-col md:flex-row gap-4 bg-transparent">
               {renderOrders(item)}
             </div>
             <div className=" bg-transparent text-priwhi">
-              <p className=" bg-transparent text-lg text-gray-500 p2-4">
+              <p className=" bg-transparent text-lg text-gray-500 p-4">
                 {setTime(item[1].order_time)}
               </p>
               <p className=" bg-transparent text-2xl px-4">

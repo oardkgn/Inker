@@ -264,7 +264,7 @@ function Dashboard() {
   };
 
   return (
-    <div className=" max-w-[2440px] mx-auto p-8">
+    <div className=" max-w-[2440px] mx-auto p-3 md:p-8">
       <CreateProduct
         type="Create"
         setShowProductModal={setShowProductModal}
@@ -275,59 +275,59 @@ function Dashboard() {
       <h4 className=" text-4xl text-pribla border-b-2 border-pribla">
         Dashboard
       </h4>
-      <div className=" flex gap-4 ">
-        <div className=" h-full border-r-2 p-4 w-fit border-pribla">
+      <div className=" flex gap-4 flex-col md:flex-row ">
+        <div className=" h-full md:border-r-2 p-1 md:p-4 w-fit text-sm md:text-md mb-8 md:mb-0 border-pribla">
           {/* dashboard navbar */}
 
-          <div className=" rounded-lg flex flex-col w-18 lg:w-72 p-4 h-full bg-pribla  gap-4 ">
+          <div className=" rounded-lg flex flex-row md:flex-col w-full md:w-72 p-2 md:p-4 h-full bg-pribla  gap-1 md:gap-4 ">
             <button
               onClick={() => handleUsers(1)}
               className={
                 tab == "users"
-                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"
-                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-4 border border-priwhi bg-pribla rounded-lg"
+                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-2 md:p-4 border border-priwhi bg-priwhi rounded-lg"
+                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-2 md:p-4 border border-priwhi bg-pribla rounded-lg"
               }
             >
               Users
-              <FaUsers size={20} className=" bg-transparent" />
+              <FaUsers  className=" bg-transparent" />
             </button>
             <button
               onClick={() => handleProducts(1)}
               className={
                 tab == "products"
-                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"
-                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-4 border border-priwhi bg-pribla rounded-lg"
+                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-2 md:p-4 border border-priwhi bg-priwhi rounded-lg"
+                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-2 md:p-4 border border-priwhi bg-pribla rounded-lg"
               }
             >
               Products
-              <MdSell size={20} className=" bg-transparent" />
+              <MdSell  className=" bg-transparent" />
             </button>
             <button
               onClick={() => handleReviews(1)}
               className={
                 tab == "reviews"
-                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"
-                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-4 border border-priwhi bg-pribla rounded-lg"
+                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-2 md:p-4 border border-priwhi bg-priwhi rounded-lg"
+                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-2 md:p-4 border border-priwhi bg-pribla rounded-lg"
               }
             >
               Reviews
-              <MdRateReview size={20} className=" bg-transparent" />
+              <MdRateReview  className=" bg-transparent" />
             </button>
             <button
               onClick={() => handleOrders()}
               className={
                 tab == "orders"
-                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-4 border border-priwhi bg-priwhi rounded-lg"
-                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-4 border border-priwhi bg-pribla rounded-lg"
+                  ? " transition-all flex gap-2 items-center  text-left text-pribla p-2 md:p-4 border border-priwhi bg-priwhi rounded-lg"
+                  : " transition-all flex gap-2 items-center  text-left text-priwhi p-2 md:p-4 border border-priwhi bg-pribla rounded-lg"
               }
             >
               Orders
-              <MdLocalShipping size={20} className=" bg-transparent" />
+              <MdLocalShipping  className=" bg-transparent" />
             </button>
           </div>
         </div>
         <div className=" w-full text-pribla">
-          <h3 className="text-4xl -mt-11">
+          <h3 className="text-4xl -mt-4 md:-mt-11">
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </h3>
           <div className=" mt-4 bg-pribla p-2 rounded-lg flex items-center justify-between w-full">
@@ -372,7 +372,7 @@ function Dashboard() {
             {/* pagination */}
 
             {tab != "orders" &&
-              <div className=" gap-2 bg-transparent flex items-center">
+              <div className=" gap-2 bg-transparent items-center hidden md:flex">
               {page != 1 && (
                 <button
                   onClick={() => setPage(page - 1)}
@@ -431,6 +431,63 @@ function Dashboard() {
           </div>
           <div className=" mt-4 flex flex-col gap-4">
             <Outlet context={[items, setItems, setShowNot, setNotify]} />
+          </div>
+          <div className=" bg-pribla p-2 rounded-lg mt-2 md:hidden">
+          <div className=" gap-2 bg-transparent flex items-center ">
+            {page != 1 && (
+              <button
+                onClick={() => setPage(page - 1)}
+                className=" bg-transparent text-priwhi border border-priwhi w-10 h-10 flex items-center justify-center rounded-lg transition-all hover:scale-105 text-xl"
+              >
+                <IoCaretBack className=" bg-transparent" />
+              </button>
+            )}
+
+            {page - 1 > 0 && (
+              <button
+                onClick={() => setPage(page - 1)}
+                className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
+                  }`}
+              >
+                {page - 1}
+              </button>
+            )}
+            <button
+              onClick={() => setPage(page)}
+              className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg 
+                    !text-pribla bg-priwhi
+                `}
+            >
+              {page}
+            </button>
+            {page + 1 <= totalPages && (
+              <button
+                onClick={() => setPage(page + 1)}
+                className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
+                  }`}
+              >
+                {page + 1}
+              </button>
+            )}
+            {page + 2 <= totalPages && (
+              <button
+                onClick={() => setPage(page + 2)}
+                className={`w-10 h-10 flex justify-center transition-all hover:scale-110 items-center rounded-lg text-priwhi 
+                  }`}
+              >
+                {page + 2}
+              </button>
+            )}
+
+            {page != totalPages && items.length != 0 && (
+              <button
+                onClick={() => setPage(page + 1)}
+                className=" bg-transparent text-priwhi border border-priwhi w-10 h-10 flex items-center justify-center rounded-lg transition-all hover:scale-105 text-xl"
+              >
+                <IoCaretForward className=" bg-transparent" />
+              </button>
+            )}
+          </div>
           </div>
         </div>
       </div>

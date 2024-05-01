@@ -27,15 +27,18 @@ function OneReview({ review }) {
 
 
   return (
-    <div className=" bg-pribla p-2 rounded-lg text-priwhi">
-      <div className=" flex gap-2 bg-transparent items-center">
+    <div className=" bg-pribla p-2 w-full rounded-lg text-priwhi">
+      <div className=" flex gap-2 flex-wrap bg-transparent items-center">
+        <div className=" flex bg-transparent items-center flex-col md:flex-row">
         <h1 className=" bg-transparent text-xl p-2 font-semibold">
           {review.user_email}
         </h1>
         <div className=" bg-transparent flex mr-auto">{ratingStars}</div>
+        </div>
         {review.comment_time && <p className=" text-sm text-gray-500 bg-transparent">{review.comment_time.split("T")[0]}</p>}
+        
       </div>
-      <p className=" bg-white bg-opacity-10 p-2 rounded-lg">{review.comment}</p>
+      <p className=" bg-white bg-opacity-10 p-2 rounded-lg mt-2">{review.comment}</p>
     </div>
   );
 }

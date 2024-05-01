@@ -13,6 +13,7 @@ import Reviews from "./components/dashboard/Reviews";
 import Orders from "./components/dashboard/Orders";
 import OneProductPage from "./components/OneProductPage";
 import Search from "./pages/Search";
+import ScrollToTop from "./components/ScrolltoTop";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,7 +22,9 @@ function App() {
 
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Navbar />
+      <div className=" w-full h-[62px] bg-transparent"></div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />

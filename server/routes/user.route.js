@@ -1,5 +1,5 @@
 import express from "express";
-import { addToCart, delCart, deleteUser, dislikeProduct, getCartItems, getUserLikes, getUserOrders, isLiked, likeProduct, makeOrder, searchProducts, update } from "../controllers/user.controller.js";
+import { addToCart, delCart, delCartItem, deleteUser, dislikeProduct, getCartItems, getUserLikes, getUserOrders, isLiked, likeProduct, makeOrder, searchProducts, update } from "../controllers/user.controller.js";
 import { verifyAdmin, verifyToken } from "../utils.js";
 import { deleteUserReview, getUserReviews } from "../controllers/review.controller.js";
 
@@ -19,6 +19,7 @@ router.post("/addToCart", verifyToken, addToCart);
 router.get("/getCartItems/:email", verifyToken, getCartItems);
 router.post("/makeOrder", verifyToken, makeOrder);
 router.delete("/delCart/:email", verifyToken, delCart);
+router.delete("/delCartItem/:email,:id", verifyToken, delCartItem);
 router.post("/search/:text", searchProducts);
 
 

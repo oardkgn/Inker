@@ -127,7 +127,7 @@ function OneProductPage() {
         <div className=" w-full max-w-[400px] ">
           <img
             className=" h-full"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQruRlDDI0EUbDfj05Menp7Sw36Omm_oq66MTBQnWV4hw&s"
+            src={product.images}
             alt=""
           />
         </div>

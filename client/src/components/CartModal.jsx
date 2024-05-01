@@ -88,7 +88,20 @@ function CartModal({ showCart, setShowCart, currentUser, setAmountCartItem }) {
     }
   };
 
-  const handleDel = (itemId) => {
+  console.log(items);
+
+  const handleDel = async(itemId) => {
+
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/user/delCartItem/${currentUser.email},${itemId}`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
    
     const pos = items.findIndex((el) => el.id === itemId);
     let itemsArr = items;
@@ -157,7 +170,7 @@ function CartModal({ showCart, setShowCart, currentUser, setAmountCartItem }) {
               >
                 <img
                   className=" rounded-lg"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7q0SVkFGwJybZE1xQ8x2X0LtfL3PXGLXYew2-M1Ytpw&s"
+                  src={item.images}
                   alt=""
                 />
                 <div className=" bg-transparent flex flex-col gap-4">

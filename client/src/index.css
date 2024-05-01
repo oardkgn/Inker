@@ -8,7 +8,9 @@
 * {
   font-family: "Dosis", sans-serif;
   background-color: #EEEEEE;
+  scroll-behavior: smooth;
 }
+
 
 a {
   background-color: transparent;

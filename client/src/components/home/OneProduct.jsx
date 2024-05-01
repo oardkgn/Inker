@@ -88,7 +88,7 @@ function OneProduct({ product }) {
 
   return (
     <div className=" bg-transparent">
-      <div className="bg-transparent group relative  overflow-hidden">
+      <div className="bg-transparent group h-[300px] relative  overflow-hidden">
         {product && (
           <div className=" absolute top-1 left-1 flex z-30 gap-1 bg-transparent">
             {product.subtypes?.split(" ").map((subtype, key) => {
@@ -103,13 +103,13 @@ function OneProduct({ product }) {
             })}
           </div>
         )}
-        <div className=" overflow-hidden rounded-lg">
+        <div className=" overflow-hidden w-full h-full object-contain rounded-lg">
           <img
             onClick={() => {
               navigate(`product/${product.id}`);
             }}
-            className="cursor-pointer bg-transparent transition-all group-hover:scale-125 w-full rounded-lg object-contain "
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQruRlDDI0EUbDfj05Menp7Sw36Omm_oq66MTBQnWV4hw&s"
+            className="cursor-pointer bg-transparent transition-all group-hover:scale-125  w-full h-full  rounded-lg "
+            src={product.images}
             alt=""
           />
         </div>

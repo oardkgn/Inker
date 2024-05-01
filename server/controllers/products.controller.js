@@ -289,7 +289,7 @@ export const getTypeProduct = async (req, res) => {
       SELECT COUNT(*) AS total_products FROM products WHERE type = ?;
       `;
       let page = req.body.page
-      if (req.body.page) {
+      if (!req.body.page) {
         page = 1
       }
   db.query(q, [req.body.type], (err, data) => {

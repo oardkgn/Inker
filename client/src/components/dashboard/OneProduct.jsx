@@ -48,7 +48,7 @@ function product({
       <div className=" max-w-[200px] p-2">
         <img
           className=" object-contain rounded-lg"
-          src="https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg"
+          src={product.images}
           alt=""
         />
       </div>
